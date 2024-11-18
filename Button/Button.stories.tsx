@@ -14,6 +14,6 @@ const meta = {
 
 export default meta;
 
-export const Primary = () => {
-  return <Button />;
+export const Default = () => {
+  return <Button>Hello World</Button>;
 };

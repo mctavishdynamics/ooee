@@ -6,14 +6,12 @@ export const defaultClassNames = {
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
   classNames?: typeof defaultClassNames;
   suppressDefaultStyles?: boolean;
 }
 
 export const Button: FC<ButtonProps> = ({
   classNames = {},
-  className = "",
   suppressDefaultStyles = false,
   ...buttonProps
 }) => {

@@ -1,0 +1,27 @@
+:root {
+    --ooee--InputText--background-color: #eee;
+    --ooee--InputText--background-color--hover: #ddd;
+    --ooee--InputText--background-color--focus: #ccc;
+    --ooee--InputText--padding-vertical: 8px;
+    --ooee--InputText--padding-horizontal: 8px;
+}
+
+.InputText {
+    background-color: var(--ooee--InputText--background-color);
+    border: 0;
+    padding: var(--ooee--InputText--padding-vertical)
+        var(--ooee--InputText--padding-horizontal);
+
+    &:hover {
+        background-color: var(--ooee--InputText--background-color--hover);
+    }
+
+    &:focus {
+        background-color: var(--ooee--InputText--background-color--focus);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #aaa;
+        outline-offset: 2px;
+    }
+}

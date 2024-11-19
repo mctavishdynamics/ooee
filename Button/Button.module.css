@@ -4,6 +4,11 @@
     --ooee--Button--background-color--active: #ccc;
     --ooee--Button--padding-vertical: 8px;
     --ooee--Button--padding-horizontal: 16px;
+
+    --ooee--Button--outline-width--focus-visible: 2px;
+    --ooee--Button--outline-style--focus-visible: solid;
+    --ooee--Button--outline-color--focus-visible: #aaa;
+    --ooee--Button--outline-offset--focus-visible: 2px;
 }
 
 .Button {
@@ -22,7 +27,9 @@
     }
 
     &:focus-visible {
-        outline: 2px solid #aaa;
-        outline-offset: 2px;
+        outline-width: var(--ooee--Button--outline-width--focus-visible);
+        outline-style: var(--ooee--Button--outline-style--focus-visible);
+        outline-color: var(--ooee--Button--outline-color--focus-visible);
+        outline-offset: var(--ooee--Button--outline-offset--focus-visible);
     }
 }

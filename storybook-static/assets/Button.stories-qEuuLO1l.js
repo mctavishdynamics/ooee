@@ -1,3 +1,0 @@
-import{j as a}from"./jsx-runtime-CkxqCPlQ.js";import"./index-DJO9vBfz.js";const r=()=>a.jsx("button",{children:"Hello World"});r.__docgenInfo={description:"",methods:[],displayName:"Button"};const c={title:"Button",component:r,tags:["autodocs"],parameters:{layout:"centered"},args:{}},t=()=>a.jsx(r,{});t.__docgenInfo={description:"",methods:[],displayName:"Primary"};var e,o,s;t.parameters={...t.parameters,docs:{...(e=t.parameters)==null?void 0:e.docs,source:{originalSource:`() => {
-  return <Button />;
-}`,...(s=(o=t.parameters)==null?void 0:o.docs)==null?void 0:s.source}}};const d=["Primary"];export{t as Primary,d as __namedExportsOrder,c as default};

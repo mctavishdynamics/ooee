@@ -1,0 +1,3 @@
+import{j as s}from"./jsx-runtime-DR9Q75dM.js";import{B as a}from"./Button-DDx4WbKH.js";import"./index-DRjF_FHU.js";const c={title:"Button",component:a,tags:["autodocs"],parameters:{layout:"centered"},args:{}},t=()=>s.jsx(a,{children:"Hello World"});t.__docgenInfo={description:"",methods:[],displayName:"Default"};var e,o,r;t.parameters={...t.parameters,docs:{...(e=t.parameters)==null?void 0:e.docs,source:{originalSource:`() => {
+  return <Button>Hello World</Button>;
+}`,...(r=(o=t.parameters)==null?void 0:o.docs)==null?void 0:r.source}}};const d=["Default"];export{t as Default,d as __namedExportsOrder,c as default};

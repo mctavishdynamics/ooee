@@ -12,12 +12,14 @@ import {
   FloatingPortal,
   Placement,
   offset,
+  useFocus,
 } from "@floating-ui/react";
 
 import styles from "./ComboBox.module.css";
 import { InputText } from "../InputText/InputText";
 import { Button } from "../Button/Button";
 import { ComboBoxItem } from "./ComboBoxItem";
+import mergeRefs from "merge-refs";
 
 const data = ["1", "2", "3"];
 
@@ -87,6 +89,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   const role = useRole(context, { role: "listbox" });
   const dismiss = useDismiss(context);
+  const focus = useFocus(context);
   const listNav = useListNavigation(context, {
     listRef,
     activeIndex,
@@ -96,7 +99,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
   });
 
   const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
-    [role, dismiss, listNav],
+    [role, dismiss, listNav, focus],
   );
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -117,19 +120,14 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   return (
     <>
-      <div ref={refs.setReference} className={_classNames.ComboBox}>
+      <div ref={refs.setPositionReference} className={_classNames.ComboBox}>
         <InputText
-          ref={inputRef}
+          ref={mergeRefs(refs.setReference, inputRef)}
           {...getReferenceProps({
             ...inputProps,
             onChange,
             value: inputValue,
             "aria-autocomplete": "list",
-            onFocus() {
-              if (openOnFocus) {
-                setOpen(true);
-              }
-            },
             onKeyDown(event) {
               if (
                 event.key === "Enter" &&

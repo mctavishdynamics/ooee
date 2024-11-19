@@ -40,6 +40,7 @@
     padding: var(--ooee--ComboBoxItem--padding-vertical)
         var(--ooee--ComboBoxItem--padding-horizontal);
     background: var(--ooee--ComboBoxItem--background-color);
+    font-family: var(--ooee--font-family);
 }
 
 :root {
@@ -48,4 +49,17 @@
 
 .ComboBoxItemActive {
     background: var(--ooee--ComboBoxItemActive--background-color);
+}
+
+:root {
+    --ooee--ComboBoxNoResults--background-color: #eee;
+    --ooee--ComboBoxNoResults--padding-vertical: 8px;
+    --ooee--ComboBoxNoResults--padding-horizontal: 8px;
+}
+
+.ComboBoxNoResults {
+    padding: var(--ooee--ComboBoxNoResults--padding-vertical)
+        var(--ooee--ComboBoxNoResults--padding-horizontal);
+    background: var(--ooee--ComboBoxNoResults--background-color);
+    font-family: var(--ooee--font-family);
 }

@@ -1,7 +1,6 @@
 import type { Meta } from "@storybook/react";
 
 import { ComboBox } from "./ComboBox";
-import { InputText } from "../InputText/InputText";
 
 const meta = {
   title: "ComboBox",
@@ -18,7 +17,11 @@ export default meta;
 export const Default = () => {
   return (
     <>
-      <ComboBox />
+      <ComboBox
+        values={["1", "2", "3"]}
+        noResults="Press Enter to create"
+        onCreate={(value) => console.log(value)}
+      />
     </>
   );
 };

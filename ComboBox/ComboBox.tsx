@@ -1,4 +1,4 @@
-import { FC, InputHTMLAttributes, useRef, useState } from "react";
+import { FC, InputHTMLAttributes, ReactNode, useRef, useState } from "react";
 import {
   autoUpdate,
   size,
@@ -12,7 +12,7 @@ import {
   FloatingPortal,
   Placement,
   offset,
-  useFocus,
+  useClick,
 } from "@floating-ui/react";
 
 import styles from "./ComboBox.module.css";
@@ -20,14 +20,14 @@ import { InputText } from "../InputText/InputText";
 import { Button } from "../Button/Button";
 import { ComboBoxItem } from "./ComboBoxItem";
 import mergeRefs from "merge-refs";
-
-const data = ["1", "2", "3"];
+import { useUpdateEffect } from "react-use";
 
 export const defaultClassNames = {
   ComboBox: styles.ComboBox,
   ComboBoxList: styles.ComboBoxList,
   ComboBoxItem: styles.ComboBoxItem,
   ComboBoxActive: styles.ComboBoxItemActive,
+  ComboBoxNoResults: styles.ComboBoxNoResults,
 };
 
 export interface ComboBoxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -38,6 +38,9 @@ export interface ComboBoxProps extends InputHTMLAttributes<HTMLInputElement> {
   offsetAlignmentAxis?: number;
   offsetCrossAxis?: number;
   openOnFocus?: boolean;
+  values?: string[];
+  noResults?: string | ReactNode;
+  onCreate?: (value: string) => void;
 }
 
 export const ComboBox: FC<ComboBoxProps> = ({
@@ -48,6 +51,9 @@ export const ComboBox: FC<ComboBoxProps> = ({
   offsetAlignmentAxis,
   offsetCrossAxis,
   openOnFocus = false,
+  values = [],
+  noResults = "No results",
+  onCreate = () => {},
   ...inputProps
 }) => {
   const _classNames = Object.assign(
@@ -57,11 +63,19 @@ export const ComboBox: FC<ComboBoxProps> = ({
   );
 
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const listRef = useRef<Array<HTMLElement | null>>([]);
+
+  useUpdateEffect(() => {
+    if (inputRef.current) {
+      if (inputValue === "") {
+        setOpen(true);
+      }
+    }
+  }, [inputValue]);
 
   const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
     whileElementsMounted: autoUpdate,
@@ -89,17 +103,20 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   const role = useRole(context, { role: "listbox" });
   const dismiss = useDismiss(context);
-  const focus = useFocus(context);
+  const click = useClick(context);
   const listNav = useListNavigation(context, {
     listRef,
     activeIndex,
-    onNavigate: setActiveIndex,
+    onNavigate: (index) => {
+      setActiveIndex(index);
+    },
+    openOnArrowKeyDown: true,
     virtual: true,
     loop: false,
   });
 
   const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
-    [role, dismiss, listNav, focus],
+    [role, dismiss, listNav, click],
   );
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -114,8 +131,8 @@ export const ComboBox: FC<ComboBoxProps> = ({
     }
   }
 
-  const items = data.filter((item) =>
-    item.toLowerCase().startsWith(inputValue.toLowerCase()),
+  const filteredItems = values.filter((value) =>
+    value.toLowerCase().startsWith(inputValue.toLowerCase()),
   );
 
   return (
@@ -128,15 +145,15 @@ export const ComboBox: FC<ComboBoxProps> = ({
             onChange,
             value: inputValue,
             "aria-autocomplete": "list",
-            onKeyDown(event) {
-              if (
-                event.key === "Enter" &&
-                activeIndex != null &&
-                items[activeIndex]
-              ) {
-                setInputValue(items[activeIndex]);
-                setActiveIndex(null);
-                setOpen(false);
+            onKeyDown(ev) {
+              if (ev.key === "Enter") {
+                if (activeIndex !== null && filteredItems[activeIndex]) {
+                  setInputValue(filteredItems[activeIndex]);
+                  setActiveIndex(null);
+                  setOpen(false);
+                } else {
+                  onCreate(inputValue);
+                }
               }
             },
           })}
@@ -166,7 +183,10 @@ export const ComboBox: FC<ComboBoxProps> = ({
                 },
               })}
             >
-              {items.map((item, index) => (
+              {filteredItems.length === 0 && (
+                <div className={_classNames.ComboBoxNoResults}>{noResults}</div>
+              )}
+              {filteredItems.map((item, index) => (
                 <ComboBoxItem
                   className={_classNames.ComboBoxItem}
                   activeClassName={_classNames.ComboBoxActive}

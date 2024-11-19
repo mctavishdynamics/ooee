@@ -23,7 +23,10 @@ export const defaultClassNames = {
   ComboBox: styles.ComboBox,
 };
 
-export interface ComboBoxProps extends InputHTMLAttributes<HTMLInputElement> {}
+export interface ComboBoxProps extends InputHTMLAttributes<HTMLInputElement> {
+  classNames?: typeof defaultClassNames;
+  suppressDefaultClassNames?: boolean;
+}
 
 interface ItemProps {
   children: React.ReactNode;
@@ -56,9 +59,15 @@ const Item = forwardRef<
 
 export const ComboBox: FC<ComboBoxProps> = ({
   classNames = {},
-  suppressDefaultStyles = false,
+  suppressDefaultClassNames = false,
   ...inputProps
 }) => {
+  const _classNames = Object.assign(
+    {} as typeof defaultClassNames,
+    suppressDefaultClassNames ? {} : defaultClassNames,
+    classNames,
+  );
+
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -115,7 +124,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   return (
     <>
-      <div ref={refs.setReference} className={styles.ComboBox}>
+      <div ref={refs.setReference} className={_classNames.ComboBox}>
         <InputText
           {...getReferenceProps({
             ...inputProps,

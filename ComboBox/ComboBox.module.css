@@ -1,9 +1,11 @@
-.ComboBox {
+:root {
     --ooee--ComboBox--outline-width--focus-within: 2px;
     --ooee--ComboBox--outline-style--focus-within: solid;
     --ooee--ComboBox--outline-color--focus-within: #aaa;
     --ooee--ComboBox--outline-offset--focus-within: 2px;
+}
 
+.ComboBox {
     --ooee--InputText--outline-width--focus-visible: 0;
     --ooee--Button--outline-offset--focus-visible: -2px;
 
@@ -13,4 +15,38 @@
         outline-color: var(--ooee--ComboBox--outline-color--focus-within);
         outline-offset: var(--ooee--ComboBox--outline-offset--focus-within);
     }
+}
+
+:root {
+    --ooee--ComboBox--List--background-color: #eee;
+}
+
+.ComboBoxList {
+    /* Functional */
+    overflow-y: auto;
+
+    /* Visual */
+    background-color: var(--ooee--ComboBox--List--background-color);
+    box-shadow: 4px 4px 32px rgba(0, 0, 0, 0.2);
+}
+
+:root {
+    --ooee--ComboBoxItem--background-color: #eee;
+    --ooee--ComboBoxItem--padding-vertical: 8px;
+    --ooee--ComboBoxItem--padding-horizontal: 8px;
+}
+
+.ComboBoxItem {
+    font-family: sans-serif;
+    padding: var(--ooee--ComboBoxItem--padding-vertical)
+        var(--ooee--ComboBoxItem--padding-horizontal);
+    background: var(--ooee--ComboBoxItem--background-color);
+}
+
+:root {
+    --ooee--ComboBoxItemActive--background-color: #ddd;
+}
+
+.ComboBoxItemActive {
+    background: var(--ooee--ComboBoxItemActive--background-color);
 }

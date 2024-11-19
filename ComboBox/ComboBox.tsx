@@ -185,7 +185,11 @@ export const ComboBox: FC<ComboBoxProps> = ({
             "aria-autocomplete": "list",
             onKeyDown(ev) {
               if (ev.key === "Enter") {
-                if (activeIndex !== null && filteredItems[activeIndex]) {
+                if (
+                  activeIndex !== null &&
+                  filteredItems[activeIndex] &&
+                  values.includes(inputValue)
+                ) {
                   setInputValue(filteredItems[activeIndex]);
                   setActiveIndex(null);
                   setOpen(false);
@@ -222,9 +226,9 @@ export const ComboBox: FC<ComboBoxProps> = ({
                 },
               })}
             >
-              {filteredItems.length === 0 && (
+              {filteredItems.length === 0 || !values.includes(inputValue) ? (
                 <div className={_classNames.ComboBoxNoResults}>{noResults}</div>
-              )}
+              ) : null}
               {filteredItems.map((item, index) => (
                 <ComboBoxItem
                   className={_classNames.ComboBoxItem}

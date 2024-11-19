@@ -8,6 +8,7 @@
     --ooee--InputText--outline-style--focus-visible: solid;
     --ooee--InputText--outline-color--focus-visible: #aaa;
     --ooee--InputText--outline-offset--focus-visible: 2px;
+    --ooee--InputText--border-radius: 0;
 }
 
 .InputText {
@@ -15,6 +16,7 @@
     border: 0;
     padding: var(--ooee--InputText--padding-vertical)
         var(--ooee--InputText--padding-horizontal);
+    border-radius: var(--ooee--InputText--border-radius);
 
     &:hover {
         background-color: var(--ooee--InputText--background-color--hover);

@@ -3,6 +3,7 @@
     --ooee--ComboBox--outline-style--focus-within: solid;
     --ooee--ComboBox--outline-color--focus-within: #aaa;
     --ooee--ComboBox--outline-offset--focus-within: 2px;
+    --ooee--ComboBox--border-radius--focus-within: 0;
 }
 
 .ComboBox {
@@ -14,6 +15,7 @@
         outline-style: var(--ooee--ComboBox--outline-style--focus-within);
         outline-color: var(--ooee--ComboBox--outline-color--focus-within);
         outline-offset: var(--ooee--ComboBox--outline-offset--focus-within);
+        border-radius: var(--ooee--ComboBox--border-radius--focus-within);
     }
 }
 

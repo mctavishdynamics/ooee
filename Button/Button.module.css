@@ -4,6 +4,7 @@
     --ooee--Button--background-color--active: #ccc;
     --ooee--Button--padding-vertical: 8px;
     --ooee--Button--padding-horizontal: 16px;
+    --ooee--Button--border-radius: 0;
 
     --ooee--Button--outline-width--focus-visible: 2px;
     --ooee--Button--outline-style--focus-visible: solid;
@@ -17,6 +18,7 @@
     margin: 0;
     padding: var(--ooee--Button--padding-vertical)
         var(--ooee--Button--padding-horizontal);
+    border-radius: var(--ooee--Button--border-radius);
 
     &:hover {
         background-color: var(--ooee--Button--background-color--hover);

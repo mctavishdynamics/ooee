@@ -1,26 +1,33 @@
-import { FC, InputHTMLAttributes, ReactNode, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  InputHTMLAttributes,
+  ReactNode,
+  useRef,
+  useState,
+} from "react";
+import mergeRefs from "merge-refs";
+import { useUpdateEffect } from "react-use";
 import {
   autoUpdate,
-  size,
   flip,
+  FloatingFocusManager,
+  FloatingPortal,
+  offset,
+  Placement,
+  size,
+  useClick,
   useDismiss,
   useFloating,
   useInteractions,
   useListNavigation,
   useRole,
-  FloatingFocusManager,
-  FloatingPortal,
-  Placement,
-  offset,
-  useClick,
 } from "@floating-ui/react";
 
 import styles from "./ComboBox.module.css";
 import { InputText } from "../InputText/InputText";
 import { Button } from "../Button/Button";
 import { ComboBoxItem } from "./ComboBoxItem";
-import mergeRefs from "merge-refs";
-import { useUpdateEffect } from "react-use";
 
 export const defaultClassNames = {
   ComboBox: styles.ComboBox,
@@ -30,17 +37,19 @@ export const defaultClassNames = {
   ComboBoxNoResults: styles.ComboBoxNoResults,
 };
 
-export interface ComboBoxProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface ComboBoxProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange"> {
   classNames?: typeof defaultClassNames;
   suppressDefaultClassNames?: boolean;
   placement?: Placement;
   offsetMainAxis?: number;
   offsetAlignmentAxis?: number;
   offsetCrossAxis?: number;
-  openOnFocus?: boolean;
+  value?: string;
   values?: string[];
   noResults?: string | ReactNode;
   onCreate?: (value: string) => void;
+  onChange?: (value: string) => void;
 }
 
 export const ComboBox: FC<ComboBoxProps> = ({
@@ -50,10 +59,11 @@ export const ComboBox: FC<ComboBoxProps> = ({
   offsetMainAxis = 8,
   offsetAlignmentAxis,
   offsetCrossAxis,
-  openOnFocus = false,
+  value = "",
   values = [],
   noResults = "No results",
   onCreate = () => {},
+  onChange = () => {},
   ...inputProps
 }) => {
   const _classNames = Object.assign(
@@ -63,7 +73,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
   );
 
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(value);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -76,6 +86,12 @@ export const ComboBox: FC<ComboBoxProps> = ({
       }
     }
   }, [inputValue]);
+
+  useUpdateEffect(() => {
+    if (open) {
+      inputRef.current?.select();
+    }
+  }, [open]);
 
   const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
     whileElementsMounted: autoUpdate,
@@ -119,7 +135,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
     [role, dismiss, listNav, click],
   );
 
-  function onChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function _onChange(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
     setInputValue(value);
 
@@ -140,9 +156,14 @@ export const ComboBox: FC<ComboBoxProps> = ({
       <div ref={refs.setPositionReference} className={_classNames.ComboBox}>
         <InputText
           ref={mergeRefs(refs.setReference, inputRef)}
+          onBlur={() => {
+            if (!activeIndex || !filteredItems[activeIndex]) {
+              setInputValue(value);
+            }
+          }}
           {...getReferenceProps({
             ...inputProps,
-            onChange,
+            onChange: _onChange,
             value: inputValue,
             "aria-autocomplete": "list",
             onKeyDown(ev) {
@@ -151,6 +172,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
                   setInputValue(filteredItems[activeIndex]);
                   setActiveIndex(null);
                   setOpen(false);
+                  onChange(filteredItems[activeIndex]);
                 } else {
                   onCreate(inputValue);
                 }
@@ -198,6 +220,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
                     onClick() {
                       setInputValue(item);
                       setOpen(false);
+                      onChange(item);
                       refs.domReference.current?.focus();
                     },
                   })}

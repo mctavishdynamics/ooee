@@ -24,6 +24,7 @@
 .ComboBoxList {
     /* Functional */
     overflow-y: auto;
+    z-index: 10000;
 
     /* Visual */
     background-color: var(--ooee--ComboBox--List--background-color);

@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, HTMLProps } from "react";
 import { useId } from "@floating-ui/react";
 import clsx from "clsx";
 
@@ -11,7 +11,7 @@ export interface ComboBoxItemProps {
 
 export const ComboBoxItem = forwardRef<
   HTMLDivElement,
-  ComboBoxItemProps & React.HTMLProps<HTMLDivElement>
+  ComboBoxItemProps & HTMLProps<HTMLDivElement>
 >(({ children, active, className, activeClassName, ...rest }, ref) => {
   const id = useId();
 

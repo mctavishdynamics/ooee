@@ -218,6 +218,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
                       listRef.current[index] = node;
                     },
                     onClick() {
+                      alert(123);
                       setInputValue(item);
                       setOpen(false);
                       onChange(item);

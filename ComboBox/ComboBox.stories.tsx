@@ -16,5 +16,9 @@ const meta = {
 export default meta;
 
 export const Default = () => {
-  return <ComboBox />;
+  return (
+    <>
+      <ComboBox />
+    </>
+  );
 };

@@ -99,7 +99,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
   }, [inputValue]);
 
   useUpdateEffect(() => {
-    if (open) {
+    if (open && inputValue === value) {
       inputRef.current?.select();
     }
   }, [open]);

@@ -37,7 +37,6 @@
 }
 
 .ComboBoxItem {
-    font-family: sans-serif;
     padding: var(--ooee--ComboBoxItem--padding-vertical)
         var(--ooee--ComboBoxItem--padding-horizontal);
     background: var(--ooee--ComboBoxItem--background-color);

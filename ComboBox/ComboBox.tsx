@@ -42,7 +42,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
   classNames = {},
   suppressDefaultClassNames = false,
   placement,
-  offsetMainAxis = 0,
+  offsetMainAxis = 8,
   offsetAlignmentAxis,
   offsetCrossAxis,
   openOnFocus = false,

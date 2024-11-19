@@ -81,7 +81,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   useUpdateEffect(() => {
     if (inputRef.current) {
-      if (inputValue === "") {
+      if (open && inputValue === "") {
         setOpen(true);
       }
     }
@@ -91,6 +91,11 @@ export const ComboBox: FC<ComboBoxProps> = ({
     if (open) {
       inputRef.current?.select();
     } else {
+      if (!activeIndex) {
+        setInputValue(value);
+      }
+    }
+    else {
       if (!activeIndex) {
         setInputValue(value);
       }
@@ -160,11 +165,6 @@ export const ComboBox: FC<ComboBoxProps> = ({
       <div ref={refs.setPositionReference} className={_classNames.ComboBox}>
         <InputText
           ref={mergeRefs(refs.setReference, inputRef)}
-          onBlur={() => {
-            if (!activeIndex || !filteredItems[activeIndex]) {
-              setInputValue(value);
-            }
-          }}
           {...getReferenceProps({
             ...inputProps,
             onChange: _onChange,
@@ -222,9 +222,9 @@ export const ComboBox: FC<ComboBoxProps> = ({
                       listRef.current[index] = node;
                     },
                     onClick() {
+                      onChange(item);
                       setInputValue(item);
                       setOpen(false);
-                      onChange(item);
                       refs.domReference.current?.focus();
                     },
                   })}

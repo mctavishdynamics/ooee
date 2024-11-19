@@ -1,0 +1,36 @@
+import { ColorPalette, ColorItem } from "@storybook/blocks";
+
+# CSS Variables
+
+## background-color
+
+<ColorPalette>
+  <ColorItem title="--ooee-InputText--background-color" colors={["#eee"]} />
+  <ColorItem
+    title="--ooee-InputText--background-color--hover"
+    colors={["#ddd"]}
+  />
+  <ColorItem
+    title="--ooee-InputText--background-color--focus"
+    colors={["#ccc"]}
+  />
+</ColorPalette>
+
+## padding
+
+```css
+--ooee--InputText--padding-vertical: 8px;
+--ooee--InputText--padding-horizontal: 8px;
+```
+
+## outline
+
+```css
+--ooee--InputText--outline-width--focus-visible: 2px;
+--ooee--InputText--outline-style--focus-visible: solid;
+--ooee--InputText--outline-offset--focus-visible: 2px;
+```
+
+<ColorPalette>
+  <ColorItem title="--ooee--InputText--outline-color--focus-visible" colors={["#aaa"]} />
+</ColorPalette>

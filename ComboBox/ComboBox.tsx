@@ -115,34 +115,35 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   return (
     <>
-      <InputText
-        {...getReferenceProps({
-          ...inputProps,
-          ref: refs.setReference,
-          onChange,
-          value: inputValue,
-          "aria-autocomplete": "list",
+      <div ref={refs.setReference} className={styles.ComboBox}>
+        <InputText
+          {...getReferenceProps({
+            ...inputProps,
+            onChange,
+            value: inputValue,
+            "aria-autocomplete": "list",
 
-          onKeyDown(event) {
-            if (
-              event.key === "Enter" &&
-              activeIndex != null &&
-              items[activeIndex]
-            ) {
-              setInputValue(items[activeIndex]);
-              setActiveIndex(null);
-              setOpen(false);
-            }
-          },
-        })}
-      />
-      <Button
-        onClick={() => {
-          setOpen(!open);
-        }}
-      >
-        &darr;
-      </Button>
+            onKeyDown(event) {
+              if (
+                event.key === "Enter" &&
+                activeIndex != null &&
+                items[activeIndex]
+              ) {
+                setInputValue(items[activeIndex]);
+                setActiveIndex(null);
+                setOpen(false);
+              }
+            },
+          })}
+        />
+        <Button
+          onClick={() => {
+            setOpen(!open);
+          }}
+        >
+          &darr;
+        </Button>
+      </div>
       <FloatingPortal>
         {open && (
           <FloatingFocusManager

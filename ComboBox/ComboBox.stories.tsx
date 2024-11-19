@@ -1,6 +1,7 @@
 import type { Meta } from "@storybook/react";
 
 import { ComboBox } from "./ComboBox";
+import { InputText } from "../InputText/InputText";
 
 const meta = {
   title: "ComboBox",

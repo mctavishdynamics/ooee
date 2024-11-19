@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import mergeRefs from "merge-refs";
-import { useUpdateEffect } from "react-use";
+import { useDebounce, useUpdateEffect } from "react-use";
 import {
   autoUpdate,
   flip,
@@ -73,15 +73,24 @@ export const ComboBox: FC<ComboBoxProps> = ({
   );
 
   const [open, setOpen] = useState(false);
+  const [debouncedOpen, setDebouncedOpen] = useState(open);
   const [inputValue, setInputValue] = useState<string>(value);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const listRef = useRef<Array<HTMLElement | null>>([]);
 
+  useDebounce(
+    () => {
+      setDebouncedOpen(open);
+    },
+    10,
+    [open],
+  );
+
   useUpdateEffect(() => {
     if (inputRef.current) {
-      if (open && inputValue === "") {
+      if (inputValue === "") {
         setOpen(true);
       }
     }
@@ -90,17 +99,14 @@ export const ComboBox: FC<ComboBoxProps> = ({
   useUpdateEffect(() => {
     if (open) {
       inputRef.current?.select();
-    } else {
-      if (!activeIndex) {
-        setInputValue(value);
-      }
-    }
-    else {
-      if (!activeIndex) {
-        setInputValue(value);
-      }
     }
   }, [open]);
+
+  useUpdateEffect(() => {
+    if (!values.includes(inputValue)) {
+      setInputValue(value);
+    }
+  }, [debouncedOpen]);
 
   const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
     whileElementsMounted: autoUpdate,

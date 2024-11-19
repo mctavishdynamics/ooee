@@ -1,9 +1,8 @@
-import { FC, InputHTMLAttributes, forwardRef, useRef, useState } from "react";
+import { FC, InputHTMLAttributes, useRef, useState } from "react";
 import {
   autoUpdate,
   size,
   flip,
-  useId,
   useDismiss,
   useFloating,
   useInteractions,
@@ -11,55 +10,42 @@ import {
   useRole,
   FloatingFocusManager,
   FloatingPortal,
+  Placement,
+  offset,
 } from "@floating-ui/react";
 
 import styles from "./ComboBox.module.css";
 import { InputText } from "../InputText/InputText";
 import { Button } from "../Button/Button";
+import { ComboBoxItem } from "./ComboBoxItem";
 
 const data = ["1", "2", "3"];
 
 export const defaultClassNames = {
   ComboBox: styles.ComboBox,
+  ComboBoxList: styles.ComboBoxList,
+  ComboBoxItem: styles.ComboBoxItem,
+  ComboBoxActive: styles.ComboBoxItemActive,
 };
 
 export interface ComboBoxProps extends InputHTMLAttributes<HTMLInputElement> {
   classNames?: typeof defaultClassNames;
   suppressDefaultClassNames?: boolean;
+  placement?: Placement;
+  offsetMainAxis?: number;
+  offsetAlignmentAxis?: number;
+  offsetCrossAxis?: number;
+  openOnFocus?: boolean;
 }
-
-interface ItemProps {
-  children: React.ReactNode;
-  active: boolean;
-}
-
-const Item = forwardRef<
-  HTMLDivElement,
-  ItemProps & React.HTMLProps<HTMLDivElement>
->(({ children, active, ...rest }, ref) => {
-  const id = useId();
-  return (
-    <div
-      ref={ref}
-      role="option"
-      id={id}
-      aria-selected={active}
-      {...rest}
-      style={{
-        background: active ? "lightblue" : "none",
-        padding: 4,
-        cursor: "default",
-        ...rest.style,
-      }}
-    >
-      {children}
-    </div>
-  );
-});
 
 export const ComboBox: FC<ComboBoxProps> = ({
   classNames = {},
   suppressDefaultClassNames = false,
+  placement,
+  offsetMainAxis = 0,
+  offsetAlignmentAxis,
+  offsetCrossAxis,
+  openOnFocus = false,
   ...inputProps
 }) => {
   const _classNames = Object.assign(
@@ -71,6 +57,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const listRef = useRef<Array<HTMLElement | null>>([]);
 
@@ -78,8 +65,14 @@ export const ComboBox: FC<ComboBoxProps> = ({
     whileElementsMounted: autoUpdate,
     open,
     onOpenChange: setOpen,
+    placement,
     middleware: [
-      flip({ padding: 10 }),
+      offset({
+        mainAxis: offsetMainAxis,
+        alignmentAxis: offsetAlignmentAxis,
+        crossAxis: offsetCrossAxis,
+      }),
+      flip({ padding: 16 }),
       size({
         apply({ rects, availableHeight, elements }) {
           Object.assign(elements.floating.style, {
@@ -87,7 +80,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
             maxHeight: `${availableHeight}px`,
           });
         },
-        padding: 10,
+        padding: 16,
       }),
     ],
   });
@@ -99,7 +92,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
     activeIndex,
     onNavigate: setActiveIndex,
     virtual: true,
-    loop: true,
+    loop: false,
   });
 
   const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
@@ -126,12 +119,17 @@ export const ComboBox: FC<ComboBoxProps> = ({
     <>
       <div ref={refs.setReference} className={_classNames.ComboBox}>
         <InputText
+          ref={inputRef}
           {...getReferenceProps({
             ...inputProps,
             onChange,
             value: inputValue,
             "aria-autocomplete": "list",
-
+            onFocus() {
+              if (openOnFocus) {
+                setOpen(true);
+              }
+            },
             onKeyDown(event) {
               if (
                 event.key === "Enter" &&
@@ -148,6 +146,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
         <Button
           onClick={() => {
             setOpen(!open);
+            inputRef.current?.focus();
           }}
         >
           &darr;
@@ -162,17 +161,17 @@ export const ComboBox: FC<ComboBoxProps> = ({
           >
             <div
               {...getFloatingProps({
+                className: _classNames.ComboBoxList,
                 ref: refs.setFloating,
                 style: {
                   ...floatingStyles,
-                  background: "#eee",
-                  color: "black",
-                  overflowY: "auto",
                 },
               })}
             >
               {items.map((item, index) => (
-                <Item
+                <ComboBoxItem
+                  className={_classNames.ComboBoxItem}
+                  activeClassName={_classNames.ComboBoxActive}
                   key={item}
                   {...getItemProps({
                     ref(node) {
@@ -187,7 +186,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
                   active={activeIndex === index}
                 >
                   {item}
-                </Item>
+                </ComboBoxItem>
               ))}
             </div>
           </FloatingFocusManager>

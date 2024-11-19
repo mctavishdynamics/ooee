@@ -105,8 +105,10 @@ export const ComboBox: FC<ComboBoxProps> = ({
   }, [open]);
 
   useUpdateEffect(() => {
-    if (!values.includes(inputValue)) {
-      setInputValue(value);
+    if (!open) {
+      if (!values.includes(inputValue)) {
+        setInputValue(value);
+      }
     }
   }, [debouncedOpen]);
 

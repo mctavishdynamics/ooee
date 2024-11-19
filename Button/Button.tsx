@@ -7,15 +7,19 @@ export const defaultClassNames = {
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   classNames?: typeof defaultClassNames;
-  suppressDefaultStyles?: boolean;
+  suppressDefaultClassNames?: boolean;
 }
 
 export const Button: FC<ButtonProps> = ({
   classNames = {},
-  suppressDefaultStyles = false,
+  suppressDefaultClassNames = false,
   ...buttonProps
 }) => {
-  const _classNames = { ...defaultClassNames, ...classNames };
+  const _classNames = Object.assign(
+    {} as typeof defaultClassNames,
+    suppressDefaultClassNames ? {} : defaultClassNames,
+    classNames,
+  );
 
   return <button {...buttonProps} className={_classNames.Button} />;
 };

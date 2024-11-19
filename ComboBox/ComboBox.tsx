@@ -28,6 +28,7 @@ import styles from "./ComboBox.module.css";
 import { InputText } from "../InputText/InputText";
 import { Button } from "../Button/Button";
 import { ComboBoxItem } from "./ComboBoxItem";
+import clsx from "clsx";
 
 export const defaultClassNames = {
   ComboBox: styles.ComboBox,
@@ -39,7 +40,7 @@ export const defaultClassNames = {
 
 export interface ComboBoxProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange"> {
-  classNames?: typeof defaultClassNames;
+  classNames?: Partial<typeof defaultClassNames>;
   suppressDefaultClassNames?: boolean;
   placement?: Placement;
   offsetMainAxis?: number;
@@ -53,6 +54,7 @@ export interface ComboBoxProps
 }
 
 export const ComboBox: FC<ComboBoxProps> = ({
+  className,
   classNames = {},
   suppressDefaultClassNames = false,
   placement,
@@ -168,7 +170,10 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   return (
     <>
-      <div ref={refs.setPositionReference} className={_classNames.ComboBox}>
+      <div
+        ref={refs.setPositionReference}
+        className={clsx(_classNames.ComboBox, className)}
+      >
         <InputText
           ref={mergeRefs(refs.setReference, inputRef)}
           {...getReferenceProps({

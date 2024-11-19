@@ -21,6 +21,7 @@ export const Default = () => {
         values={["1", "2", "3"]}
         noResults="Press Enter to create"
         onCreate={(value) => console.log(value)}
+        onChange={(value) => console.log(value)}
       />
     </>
   );

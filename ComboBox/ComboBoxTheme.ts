@@ -1,6 +1,8 @@
 import clsx from "clsx";
+
+import { ThemeToken } from "../Theme/ThemeToken.ts";
+
 import styles from "./ComboBox.module.css";
-import { ThemeToken } from "../ThemeToken.ts";
 
 export interface ComboBoxThemeArgs {
   open: boolean;

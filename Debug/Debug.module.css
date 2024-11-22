@@ -1,4 +1,8 @@
 .Debug {
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
+
     font-family: monospace;
     margin: 32px 0;
     background: #eee;

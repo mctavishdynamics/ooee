@@ -27,13 +27,13 @@ import {
 
 import { InputText } from "../InputText/InputText";
 import { ComboBoxItem } from "./ComboBoxItem";
-import { IconsForComboBox } from "./IconsForComboBox";
+import { ComboBoxIcons } from "./ComboBoxIcons.tsx";
 import {
   ComboBoxDefaultTheme,
   ComboBoxTheme,
   ComboBoxThemeArgs,
 } from "./ComboBoxTheme.ts";
-import { ThemeToken } from "../ThemeToken.ts";
+import { ThemeToken } from "../Theme/ThemeToken.ts";
 import { Debug } from "../Debug/Debug.tsx";
 
 export interface ComboBoxProps
@@ -320,7 +320,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
               __theme.Toggle_ClosedIcon,
             )}
           >
-            {IconsForComboBox.Button_IconClosed()}
+            {ComboBoxIcons.Toggle_IconClosed()}
           </div>
           <div
             className={getThemeClassName(
@@ -328,7 +328,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
               __theme.Toggle_OpenedIcon,
             )}
           >
-            {IconsForComboBox.Button_IconOpened()}
+            {ComboBoxIcons.Toggle_IconOpened()}
           </div>
         </div>
       </div>

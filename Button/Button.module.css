@@ -2,6 +2,7 @@
     --ooee--Button--background-color: #eee;
     --ooee--Button--background-color--hover: #ddd;
     --ooee--Button--background-color--active: #ccc;
+    --ooee--Button--background-color--focus: #eee;
     --ooee--Button--padding-vertical: 8px;
     --ooee--Button--padding-horizontal: 16px;
     --ooee--Button--border-radius: 0;
@@ -20,18 +21,22 @@
         var(--ooee--Button--padding-horizontal);
     border-radius: var(--ooee--Button--border-radius);
 
-    &:hover {
-        background-color: var(--ooee--Button--background-color--hover);
-    }
-
-    &:active {
-        background-color: var(--ooee--Button--background-color--active);
-    }
-
     &:focus-visible {
         outline-width: var(--ooee--Button--outline-width--focus-visible);
         outline-style: var(--ooee--Button--outline-style--focus-visible);
         outline-color: var(--ooee--Button--outline-color--focus-visible);
         outline-offset: var(--ooee--Button--outline-offset--focus-visible);
     }
+}
+
+.Button__hover {
+    background-color: var(--ooee--Button--background-color--hover);
+}
+
+.Button__focus {
+    background-color: var(--ooee--Button--background-color--focus);
+}
+
+.Button__active {
+    background-color: var(--ooee--Button--background-color--active);
 }

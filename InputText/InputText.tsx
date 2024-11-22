@@ -6,13 +6,20 @@ export const defaultClassNames = {
 };
 
 export interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
+  unstyled?: boolean;
   classNames?: typeof defaultClassNames;
   suppressDefaultClassNames?: boolean;
 }
 
 export const InputText = forwardRef(
   (
-    { classNames, suppressDefaultClassNames, ...inputProps }: InputTextProps,
+    {
+      unstyled,
+      className,
+      classNames,
+      suppressDefaultClassNames,
+      ...inputProps
+    }: InputTextProps,
     ref: Ref<HTMLInputElement>,
   ) => {
     const _classNames = Object.assign(
@@ -22,7 +29,11 @@ export const InputText = forwardRef(
     );
 
     return (
-      <input {...inputProps} className={_classNames.InputText} ref={ref} />
+      <input
+        {...inputProps}
+        className={unstyled ? className : _classNames.InputText}
+        ref={ref}
+      />
     );
   },
 );

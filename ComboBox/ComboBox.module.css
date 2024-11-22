@@ -1,68 +1,197 @@
 :root {
-    --ooee--ComboBox--outline-width--focus-within: 2px;
-    --ooee--ComboBox--outline-style--focus-within: solid;
-    --ooee--ComboBox--outline-color--focus-within: #aaa;
-    --ooee--ComboBox--outline-offset--focus-within: 2px;
-    --ooee--ComboBox--border-radius--focus-within: 0;
+  --ooee--ComboBox--background-color: #eee;
+  --ooee--ComboBox--background-color--hover: #ddd;
+  --ooee--ComboBox--background-color--active: #ccc;
+  --ooee--ComboBox--background-color--focus: #ccc;
+
+  --ooee--ComboBox--padding-top: 8px;
+  --ooee--ComboBox--padding-right: 40px;
+  --ooee--ComboBox--padding-bottom: 8px;
+  --ooee--ComboBox--padding-left: 8px;
+
+  --ooee--ComboBox--outline-width--focus-within: 2px;
+  --ooee--ComboBox--outline-style--focus-within: solid;
+  --ooee--ComboBox--outline-color--focus-within: #aaa;
+  --ooee--ComboBox--outline-offset--focus-within: 2px;
+
+  --ooee--ComboBox--List--background-color: #eee;
+
+  --ooee--ComboBoxItem--background-color: #eee;
+  --ooee--ComboBoxItem--padding-vertical: 8px;
+  --ooee--ComboBoxItem--padding-horizontal: 8px;
+
+  --ooee--ComboBoxItemActive--background-color: #ddd;
+
+  --ooee--ComboBoxNoResults--background-color: #eee;
+  --ooee--ComboBoxNoResults--padding-vertical: 8px;
+  --ooee--ComboBoxNoResults--padding-horizontal: 8px;
+
+  --ooee--ComboBox-Toggle--closed--background-color: #eee;
+  --ooee--ComboBox-Toggle--closed--background-color--hover: #ddd;
+  --ooee--ComboBox-Toggle--closed--background-color--active: #ccc;
+
+  --ooee--ComboBox-Toggle--open--background-color: transparent;
+  --ooee--ComboBox-Toggle--open--background-color--hover: transparent;
+  --ooee--ComboBox-Toggle--open--background-color--active: transparent;
 }
+
+/***********************************************************************************************************************
+ComboBox
+***********************************************************************************************************************/
 
 .ComboBox {
-    --ooee--InputText--outline-width--focus-visible: 0;
-    --ooee--Button--outline-offset--focus-visible: -2px;
+  position: relative;
+  display: inline-flex;
 
-    &:focus-within {
-        outline-width: var(--ooee--ComboBox--outline-width--focus-within);
-        outline-style: var(--ooee--ComboBox--outline-style--focus-within);
-        outline-color: var(--ooee--ComboBox--outline-color--focus-within);
-        outline-offset: var(--ooee--ComboBox--outline-offset--focus-within);
-        border-radius: var(--ooee--ComboBox--border-radius--focus-within);
-    }
+  --ooee--InputText--outline-width--focus-visible: 0;
+
+  &:focus-within {
+    outline-width: var(--ooee--ComboBox--outline-width--focus-within);
+    outline-style: var(--ooee--ComboBox--outline-style--focus-within);
+    outline-color: var(--ooee--ComboBox--outline-color--focus-within);
+    outline-offset: var(--ooee--ComboBox--outline-offset--focus-within);
+  }
 }
 
-:root {
-    --ooee--ComboBox--List--background-color: #eee;
+/***********************************************************************************************************************
+InputText
+***********************************************************************************************************************/
+
+.InputText {
+  background-color: var(--ooee--ComboBox--background-color);
+  border: 0;
+  padding-top: var(--ooee--ComboBox--padding-top);
+  padding-right: var(--ooee--ComboBox--padding-right);
+  padding-bottom: var(--ooee--ComboBox--padding-bottom);
+  padding-left: var(--ooee--ComboBox--padding-left);
+
+  &:focus {
+    outline: 0;
+  }
 }
 
-.ComboBoxList {
-    /* Functional */
-    overflow-y: auto;
-    z-index: 10000;
-
-    /* Visual */
-    background-color: var(--ooee--ComboBox--List--background-color);
-    box-shadow: 4px 4px 32px rgba(0, 0, 0, 0.2);
+.InputText__hover {
+  background-color: var(--ooee--ComboBox--background-color--hover);
 }
 
-:root {
-    --ooee--ComboBoxItem--background-color: #eee;
-    --ooee--ComboBoxItem--padding-vertical: 8px;
-    --ooee--ComboBoxItem--padding-horizontal: 8px;
+.InputText__active {
+  background-color: var(--ooee--ComboBox--background-color--active);
 }
 
-.ComboBoxItem {
-    padding: var(--ooee--ComboBoxItem--padding-vertical)
-        var(--ooee--ComboBoxItem--padding-horizontal);
-    background: var(--ooee--ComboBoxItem--background-color);
-    font-family: var(--ooee--font-family);
+.InputText__focus {
+  background-color: var(--ooee--ComboBox--background-color--focus);
 }
 
-:root {
-    --ooee--ComboBoxItemActive--background-color: #ddd;
+.InputText__open {
+  background-color: var(--ooee--ComboBox--background-color--focus);
 }
 
-.ComboBoxItemActive {
-    background: var(--ooee--ComboBoxItemActive--background-color);
+/***********************************************************************************************************************
+Toggle
+***********************************************************************************************************************/
+
+.Toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
 }
 
-:root {
-    --ooee--ComboBoxNoResults--background-color: #eee;
-    --ooee--ComboBoxNoResults--padding-vertical: 8px;
-    --ooee--ComboBoxNoResults--padding-horizontal: 8px;
+.Toggle__hover {
+  background-color: var(--ooee--ComboBox--background-color--hover);
 }
 
-.ComboBoxNoResults {
-    padding: var(--ooee--ComboBoxNoResults--padding-vertical)
-        var(--ooee--ComboBoxNoResults--padding-horizontal);
-    background: var(--ooee--ComboBoxNoResults--background-color);
-    font-family: var(--ooee--font-family);
+.Toggle__active {
+  background-color: var(--ooee--ComboBox--background-color--active);
+}
+
+.Toggle__focus {
+  background-color: var(--ooee--ComboBox--background-color--focus);
+}
+
+.Toggle__closed {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+}
+
+.Toggle__open {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+
+  background-color: var(--ooee--ComboBox-Toggle--open--background-color);
+
+  pointer-events: none;
+}
+
+.Toggle_Icon {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Toggle_ClosedIcon {
+}
+
+.Toggle_ClosedIcon__closed {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.Toggle_ClosedIcon__open {
+  opacity: 0;
+  transform: scaleY(0);
+}
+
+.Toggle_OpenedIcon {
+}
+
+.Toggle_OpenedIcon__closed {
+  opacity: 0;
+  transform: scaleY(0);
+}
+
+.Toggle_OpenedIcon__open {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/***********************************************************************************************************************
+List
+***********************************************************************************************************************/
+
+.List {
+  /* Functional */
+  overflow-y: auto;
+
+  /* Visual */
+  background-color: var(--ooee--ComboBox--List--background-color);
+  box-shadow: 4px 4px 32px rgba(0, 0, 0, 0.2);
+}
+
+.List_Item {
+  padding: var(--ooee--ComboBoxItem--padding-vertical)
+    var(--ooee--ComboBoxItem--padding-horizontal);
+  background: var(--ooee--ComboBoxItem--background-color);
+  font-family: var(--ooee--font-family);
+}
+
+.List_Item__Active {
+  background: var(--ooee--ComboBoxItemActive--background-color);
+}
+
+.List_Item_NoResults {
+  padding: var(--ooee--ComboBoxNoResults--padding-vertical)
+    var(--ooee--ComboBoxNoResults--padding-horizontal);
+  background: var(--ooee--ComboBoxNoResults--background-color);
+  font-family: var(--ooee--font-family);
 }

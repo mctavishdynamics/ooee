@@ -3,11 +3,12 @@ import {
   FC,
   InputHTMLAttributes,
   ReactNode,
+  useCallback,
   useRef,
   useState,
 } from "react";
 import mergeRefs from "merge-refs";
-import { useDebounce, useUpdateEffect } from "react-use";
+import { useUpdateEffect } from "react-use";
 import {
   autoUpdate,
   flip,
@@ -24,24 +25,24 @@ import {
   useRole,
 } from "@floating-ui/react";
 
-import styles from "./ComboBox.module.css";
 import { InputText } from "../InputText/InputText";
-import { Button } from "../Button/Button";
 import { ComboBoxItem } from "./ComboBoxItem";
-import clsx from "clsx";
-
-export const defaultClassNames = {
-  ComboBox: styles.ComboBox,
-  ComboBoxList: styles.ComboBoxList,
-  ComboBoxItem: styles.ComboBoxItem,
-  ComboBoxActive: styles.ComboBoxItemActive,
-  ComboBoxNoResults: styles.ComboBoxNoResults,
-};
+import { IconsForComboBox } from "./IconsForComboBox";
+import {
+  ComboBoxDefaultTheme,
+  ComboBoxTheme,
+  ComboBoxThemeArgs,
+} from "./ComboBoxTheme.ts";
+import { ThemeToken } from "../ThemeToken.ts";
+import { Debug } from "../Debug/Debug.tsx";
 
 export interface ComboBoxProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange"> {
-  classNames?: Partial<typeof defaultClassNames>;
-  suppressDefaultClassNames?: boolean;
+  __debug?: boolean;
+  theme?: ComboBoxTheme;
+  unstyled?: boolean;
+  className?: string;
+
   placement?: Placement;
   offsetMainAxis?: number;
   offsetAlignmentAxis?: number;
@@ -54,68 +55,93 @@ export interface ComboBoxProps
 }
 
 export const ComboBox: FC<ComboBoxProps> = ({
-  className,
-  classNames = {},
-  suppressDefaultClassNames = false,
+  __debug = false,
+  theme = {},
+  unstyled = false,
+  className = "",
+
   placement,
   offsetMainAxis = 8,
   offsetAlignmentAxis,
   offsetCrossAxis,
   value = "",
   values = [],
-  noResults = "No results",
   onCreate = () => {},
   onChange = () => {},
   ...inputProps
 }) => {
-  const _classNames = Object.assign(
-    {} as typeof defaultClassNames,
-    suppressDefaultClassNames ? {} : defaultClassNames,
-    classNames,
-  );
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // STATE
 
-  const [open, setOpen] = useState(false);
-  const [debouncedOpen, setDebouncedOpen] = useState(open);
-  const [inputValue, setInputValue] = useState<string>(value);
+  const [isOpened, setIsOpened] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [selectedValue, setSelectedValue] = useState<string>(value);
+  const [inputValue, setInputValue] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const listRef = useRef<Array<HTMLElement | null>>([]);
 
-  useDebounce(
-    () => {
-      setDebouncedOpen(open);
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // THEME
+
+  const __theme = Object.assign(
+    {} as ComboBoxTheme,
+    ComboBoxDefaultTheme,
+    theme,
+  );
+
+  const getThemeClassName = useCallback(
+    (
+      defaultClassName: string,
+      themeToken: ThemeToken<ComboBoxThemeArgs>,
+      overrides: Partial<ComboBoxThemeArgs> = {},
+    ) => {
+      if (unstyled) {
+        return defaultClassName;
+      } else if (typeof themeToken !== "function") {
+        return themeToken;
+      } else {
+        return themeToken({
+          open: isOpened,
+          hover: isHovered,
+          active: isActive,
+          focus: isFocused,
+          ...overrides,
+        });
+      }
     },
-    10,
-    [open],
+    [isOpened, isHovered, isActive, isFocused],
   );
 
   useUpdateEffect(() => {
-    if (inputRef.current) {
-      if (inputValue === "") {
-        setOpen(true);
-      }
+    if (inputValue !== null) {
+      setIsOpened(true);
     }
   }, [inputValue]);
 
   useUpdateEffect(() => {
-    if (open && inputValue === value) {
-      inputRef.current?.select();
+    if (!isOpened) {
+      setInputValue(null);
     }
-  }, [open]);
+  }, [isOpened]);
 
-  useUpdateEffect(() => {
-    if (!open) {
-      if (!values.includes(inputValue)) {
-        setInputValue(value);
-      }
-    }
-  }, [debouncedOpen]);
+  const toggleIsOpened = useCallback(() => {
+    setIsOpened((o) => !o);
+  }, []);
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // FloatingUI Config
 
   const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
     whileElementsMounted: autoUpdate,
-    open,
-    onOpenChange: setOpen,
+    open: isOpened,
+    onOpenChange: (open) => {
+      setIsOpened(open);
+    },
     placement,
     middleware: [
       offset({
@@ -137,11 +163,13 @@ export const ComboBox: FC<ComboBoxProps> = ({
   });
 
   const role = useRole(context, { role: "listbox" });
-  const dismiss = useDismiss(context);
-  const click = useClick(context);
+  const dismiss = useDismiss(context, {
+    enabled: true,
+  });
+  const click = useClick(context, { enabled: true });
   const listNav = useListNavigation(context, {
     listRef,
-    activeIndex,
+    activeIndex: activeIndex,
     onNavigate: (index) => {
       setActiveIndex(index);
     },
@@ -151,101 +179,194 @@ export const ComboBox: FC<ComboBoxProps> = ({
   });
 
   const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
-    [role, dismiss, listNav, click],
+    [role, listNav, dismiss, click],
   );
 
-  function _onChange(event: ChangeEvent<HTMLInputElement>) {
-    const value = event.target.value;
-    setInputValue(value);
+  function _onChange(ev: ChangeEvent<HTMLInputElement>) {
+    setInputValue(ev.target.value);
+    setActiveIndex(0);
+  }
 
-    if (value) {
-      setOpen(true);
-      setActiveIndex(0);
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Item Filtering and selection/creation handlers
+
+  const filteredItems = values.filter((value) => {
+    if (inputValue === null) {
+      return true;
+    } else if (selectedValue !== inputValue) {
+      return value.toLowerCase().startsWith(inputValue.toLowerCase());
     } else {
-      setOpen(false);
+      return true;
+    }
+  });
+
+  if (inputValue?.trim().length) {
+    filteredItems.push("__NEW__");
+  }
+
+  function handleSelect(value: string) {
+    if (value === "__NEW__") {
+      if (inputValue !== null) {
+        onCreate(inputValue);
+        setSelectedValue(inputValue);
+        setInputValue(null);
+        setIsOpened(false);
+      } else {
+        setIsOpened(false);
+      }
+    } else {
+      setSelectedValue(value);
+      setInputValue(null);
+      setIsOpened(false);
+      onChange(value);
     }
   }
 
-  const filteredItems = values.filter((value) =>
-    value.toLowerCase().startsWith(inputValue.toLowerCase()),
-  );
+  const { referenceOnFocus, referenceOnBlur, ...referenceProps } =
+    getReferenceProps({
+      ...inputProps,
+      onChange: _onChange,
+      "aria-autocomplete": "list",
+      onKeyDown(ev) {
+        if (ev.key === "Enter") {
+          if (activeIndex !== null && filteredItems[activeIndex]) {
+            handleSelect(filteredItems[activeIndex]);
+          }
+        }
+      },
+    });
 
   return (
     <>
+      {__debug ? (
+        <>
+          <Debug
+            data={{
+              isOpened,
+              isHovered,
+              isActive,
+              isFocused,
+              activeIndex: activeIndex,
+              inputValue,
+              selectedValue,
+              // ComboBox: getThemeClassName("ComboBox", __theme.ComboBox),
+              // Toggle: getThemeClassName("ComboBox_Toggle", __theme.Toggle),
+              // InputText: getThemeClassName(
+              //   "ComboBox_InputText",
+              //   __theme.InputText,
+              // ),
+            }}
+          />
+        </>
+      ) : null}
       <div
+        className={getThemeClassName(className, __theme.ComboBox)}
         ref={refs.setPositionReference}
-        className={clsx(_classNames.ComboBox, className)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          setIsActive(false);
+        }}
+        onMouseDown={() => setIsActive(true)}
+        onMouseUpCapture={() => setIsActive(false)}
       >
         <InputText
+          unstyled
+          className={getThemeClassName("ComboBox_InputText", __theme.InputText)}
           ref={mergeRefs(refs.setReference, inputRef)}
-          {...getReferenceProps({
-            ...inputProps,
-            onChange: _onChange,
-            value: inputValue,
-            "aria-autocomplete": "list",
-            onKeyDown(ev) {
-              if (ev.key === "Enter") {
-                if (
-                  activeIndex !== null &&
-                  filteredItems[activeIndex] &&
-                  values.includes(inputValue)
-                ) {
-                  setInputValue(filteredItems[activeIndex]);
-                  setActiveIndex(null);
-                  setOpen(false);
-                  onChange(filteredItems[activeIndex]);
-                } else {
-                  onCreate(inputValue);
-                }
+          {...referenceProps}
+          value={(() => {
+            if (!isOpened) {
+              if (inputValue === null) {
+                return selectedValue;
+              } else {
+                return inputValue;
               }
-            },
-          })}
-        />
-        <Button
-          onClick={() => {
-            setOpen(!open);
-            inputRef.current?.focus();
+            } else {
+              if (inputValue === null) {
+                return selectedValue;
+              } else {
+                return inputValue;
+              }
+            }
+          })()}
+          onFocus={(ev) => {
+            if (typeof referenceOnFocus === "function") {
+              referenceOnFocus(ev);
+            }
+            setIsFocused(true);
           }}
+          onBlur={(ev) => {
+            if (typeof referenceOnBlur === "function") {
+              referenceOnBlur(ev);
+            }
+            setIsFocused(false);
+          }}
+        />
+        <div
+          onClick={() => {
+            toggleIsOpened();
+            inputRef.current?.focus();
+            inputRef.current?.setSelectionRange(
+              inputRef.current?.value.length,
+              inputRef.current?.value.length,
+            );
+          }}
+          className={getThemeClassName("ComboBox_Toggle", __theme.Toggle)}
         >
-          &darr;
-        </Button>
+          <div
+            className={getThemeClassName(
+              "ComboBox_Toggle_IconClosed",
+              __theme.Toggle_ClosedIcon,
+            )}
+          >
+            {IconsForComboBox.Button_IconClosed()}
+          </div>
+          <div
+            className={getThemeClassName(
+              "ComboBox_Toggle_IconOpened",
+              __theme.Toggle_OpenedIcon,
+            )}
+          >
+            {IconsForComboBox.Button_IconOpened()}
+          </div>
+        </div>
       </div>
       <FloatingPortal>
-        {open && (
+        {isOpened && (
           <FloatingFocusManager
             context={context}
             initialFocus={-1}
             visuallyHiddenDismiss
           >
             <div
+              className={getThemeClassName("ComboBox_List", __theme.List)}
               {...getFloatingProps({
-                className: _classNames.ComboBoxList,
                 ref: refs.setFloating,
                 style: {
                   ...floatingStyles,
                 },
               })}
             >
-              {filteredItems.length === 0 || !values.includes(inputValue) ? (
-                <div className={_classNames.ComboBoxNoResults}>{noResults}</div>
-              ) : null}
               {filteredItems.map((item, index) => (
                 <ComboBoxItem
-                  className={_classNames.ComboBoxItem}
-                  activeClassName={_classNames.ComboBoxActive}
+                  className={getThemeClassName(
+                    "ComboBox_List_Item",
+                    __theme.List_Item,
+                    {
+                      active: activeIndex === index,
+                    },
+                  )}
+                  selected={activeIndex === index}
                   key={item}
                   {...getItemProps({
                     ref(node) {
                       listRef.current[index] = node;
                     },
                     onClick() {
-                      onChange(item);
-                      setInputValue(item);
-                      setOpen(false);
-                      refs.domReference.current?.focus();
+                      handleSelect(item);
                     },
                   })}
-                  active={activeIndex === index}
                 >
                   {item}
                 </ComboBoxItem>

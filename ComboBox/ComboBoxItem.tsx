@@ -1,29 +1,26 @@
-import { forwardRef, HTMLProps } from "react";
+import { forwardRef } from "react";
 import { useId } from "@floating-ui/react";
 import clsx from "clsx";
 
 export interface ComboBoxItemProps {
   children: React.ReactNode;
-  active: boolean;
+  selected: boolean;
   className?: string;
-  activeClassName?: string;
 }
 
 export const ComboBoxItem = forwardRef<
   HTMLDivElement,
-  ComboBoxItemProps & HTMLProps<HTMLDivElement>
->(({ children, active, className, activeClassName, ...rest }, ref) => {
+  ComboBoxItemProps & React.HTMLProps<HTMLDivElement>
+>(({ children, selected, className, ...rest }, ref) => {
   const id = useId();
 
   return (
     <div
-      className={clsx(className, {
-        [activeClassName as string]: active,
-      })}
+      className={clsx(className)}
       ref={ref}
       role="option"
       id={id}
-      aria-selected={active}
+      aria-selected={selected}
       {...rest}
       style={{
         ...rest.style,

@@ -1,6 +1,8 @@
 import type { Meta } from "@storybook/react";
 
 import { ComboBox } from "./ComboBox";
+import { useState } from "react";
+import { Debug } from "../Debug/Debug.tsx";
 
 const meta = {
   title: "ComboBox",
@@ -15,13 +17,26 @@ const meta = {
 export default meta;
 
 export const Default = () => {
+  const [debugMode] = useState(true);
+  const [values, setValues] = useState<string[]>([
+    "Online Service",
+    "Development",
+    "Software",
+    "Utilities / Services",
+    "Entertainment",
+  ]);
+  const [value, setValue] = useState("");
+
   return (
     <>
+      {debugMode ? <Debug data={{ value, values }} /> : null}
       <ComboBox
-        values={["1", "2", "3"]}
+        value={value}
+        values={values}
         noResults="Press Enter to create"
-        onCreate={(value) => console.log(value)}
-        onChange={(value) => console.log(value)}
+        onCreate={(v) => setValues([v, ...values])}
+        onChange={(v) => setValue(v)}
+        __debug={debugMode}
       />
     </>
   );

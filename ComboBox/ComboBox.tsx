@@ -368,7 +368,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
                     },
                   })}
                 >
-                  {item}
+                  {item === "__NEW__" ? `Create ${inputValue}...` : item}
                 </ComboBoxItem>
               ))}
             </div>

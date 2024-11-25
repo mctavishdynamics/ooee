@@ -4,6 +4,7 @@ import {
   InputHTMLAttributes,
   ReactNode,
   useCallback,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -47,11 +48,16 @@ export interface ComboBoxProps
   offsetMainAxis?: number;
   offsetAlignmentAxis?: number;
   offsetCrossAxis?: number;
+
   value?: string;
   values?: string[];
-  noResults?: string | ReactNode;
-  onCreate?: (value: string) => void;
+
   onChange?: (value: string) => void;
+
+  enableCreation?: boolean;
+  onCreate?: (value: string) => void;
+
+  noResults?: string | ReactNode;
 }
 
 export const ComboBox: FC<ComboBoxProps> = ({
@@ -68,8 +74,10 @@ export const ComboBox: FC<ComboBoxProps> = ({
   value = "",
   values = [],
 
-  onCreate = () => {},
   onChange = () => {},
+
+  enableCreation = false,
+  onCreate = () => {},
 
   ...inputProps
 }) => {
@@ -194,24 +202,40 @@ export const ComboBox: FC<ComboBoxProps> = ({
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Item Filtering and selection/creation handlers
+  // Value Filtering and selection/creation handlers
 
-  const filteredItems = values.filter((value) => {
-    if (inputValue === null) {
-      return true;
-    } else if (selectedValue !== inputValue) {
-      return value.toLowerCase().startsWith(inputValue.toLowerCase());
-    } else {
-      return true;
+  const filteredValues = useMemo(() => {
+    const _filteredValues = values.filter((value) => {
+      if (inputValue === null) {
+        return true;
+      } else if (selectedValue !== inputValue) {
+        return value.toLowerCase().startsWith(inputValue.toLowerCase());
+      } else {
+        return true;
+      }
+    });
+
+    if (inputValue?.trim().length && enableCreation) {
+      _filteredValues.push("__NEW__");
+    } else if (!values.length) {
+      _filteredValues.push("__EMPTY__");
+    } else if (!_filteredValues.length) {
+      _filteredValues.push("__FILTERED_EMPTY__");
     }
-  });
 
-  if (inputValue?.trim().length) {
-    filteredItems.push("__NEW__");
-  }
+    return _filteredValues;
+  }, [values, inputValue]);
+
+  const isEmpty =
+    filteredValues.length === 1 &&
+    ["__EMPTY__", "__FILTERED_EMPTY__"].indexOf(filteredValues[0])
+      ? true
+      : false;
+
+  console.log(isEmpty);
 
   function handleSelect(value: string) {
-    if (value === "__NEW__") {
+    if (enableCreation && value === "__NEW__") {
       if (inputValue !== null) {
         onCreate(inputValue);
         setSelectedValue(inputValue);
@@ -220,11 +244,25 @@ export const ComboBox: FC<ComboBoxProps> = ({
       } else {
         setIsOpened(false);
       }
+    } else if (value.startsWith("__")) {
+      return;
     } else {
       setSelectedValue(value);
       setInputValue(null);
       setIsOpened(false);
       onChange(value);
+    }
+  }
+
+  function renderItem(value: string) {
+    if (value === "__EMPTY__") {
+      return "Empty";
+    } else if (value === "__FILTERED_EMPTY__") {
+      return "No Results";
+    } else if (value === "__NEW__") {
+      return `Create ${inputValue}...`;
+    } else {
+      return value;
     }
   }
 
@@ -235,8 +273,8 @@ export const ComboBox: FC<ComboBoxProps> = ({
       "aria-autocomplete": "list",
       onKeyDown(ev) {
         if (ev.key === "Enter") {
-          if (activeIndex !== null && filteredItems[activeIndex]) {
-            handleSelect(filteredItems[activeIndex]);
+          if (activeIndex !== null && filteredValues[activeIndex]) {
+            handleSelect(filteredValues[activeIndex]);
           }
         }
       },
@@ -363,27 +401,29 @@ export const ComboBox: FC<ComboBoxProps> = ({
                 }
               }}
             >
-              {filteredItems.map((item, index) => (
+              {filteredValues.map((value, index) => (
                 <ComboBoxItem
                   className={getThemeClassName(
                     "ComboBox_List_Item",
                     __theme.List_Item,
                     {
-                      active: activeIndex === index,
+                      active: isEmpty ? false : activeIndex === index,
                     },
                   )}
-                  selected={activeIndex === index}
-                  key={item}
-                  {...getItemProps({
-                    ref(node) {
-                      listRef.current[index] = node;
-                    },
-                    onClick() {
-                      handleSelect(item);
-                    },
-                  })}
+                  selected={isEmpty ? false : activeIndex === index}
+                  key={value}
+                  {...(["__EMPTY__", "__FILTERED_EMPTY__"].indexOf(value) < 0
+                    ? getItemProps({
+                        ref(node) {
+                          listRef.current[index] = node;
+                        },
+                        onClick() {
+                          handleSelect(value);
+                        },
+                      })
+                    : {})}
                 >
-                  {item === "__NEW__" ? `Create ${inputValue}...` : item}
+                  {renderItem(value)}
                 </ComboBoxItem>
               ))}
             </div>

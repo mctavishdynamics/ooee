@@ -47,7 +47,6 @@ export const Default = () => {
       <ComboBox
         value={value}
         values={values}
-        noResults="Press Enter to create"
         onCreate={(v) => setValues([v, ...values])}
         onChange={(v) => setValue(v)}
         enableCreation={true}

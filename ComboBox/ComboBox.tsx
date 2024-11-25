@@ -57,7 +57,12 @@ export interface ComboBoxProps
   enableCreation?: boolean;
   onCreate?: (value: string) => void;
 
-  noResults?: string | ReactNode;
+  emptyMessage?: string;
+  filteredEmptyMessage?: string;
+  itemRenderer?: (
+    value: string,
+    inputValue?: null | string,
+  ) => string | ReactNode;
 }
 
 export const ComboBox: FC<ComboBoxProps> = ({
@@ -78,6 +83,20 @@ export const ComboBox: FC<ComboBoxProps> = ({
 
   enableCreation = false,
   onCreate = () => {},
+
+  emptyMessage = "(Empty)",
+  filteredEmptyMessage = "(No Results)",
+  itemRenderer = (value, inputValue) => {
+    if (value === "__EMPTY__") {
+      return emptyMessage;
+    } else if (value === "__FILTERED_EMPTY__") {
+      return filteredEmptyMessage;
+    } else if (value === "__NEW__") {
+      return `Create ${inputValue}...`;
+    } else {
+      return value;
+    }
+  },
 
   ...inputProps
 }) => {
@@ -254,18 +273,6 @@ export const ComboBox: FC<ComboBoxProps> = ({
     }
   }
 
-  function renderItem(value: string) {
-    if (value === "__EMPTY__") {
-      return "Empty";
-    } else if (value === "__FILTERED_EMPTY__") {
-      return "No Results";
-    } else if (value === "__NEW__") {
-      return `Create ${inputValue}...`;
-    } else {
-      return value;
-    }
-  }
-
   const { referenceOnFocus, referenceOnBlur, ...referenceProps } =
     getReferenceProps({
       ...inputProps,
@@ -423,7 +430,7 @@ export const ComboBox: FC<ComboBoxProps> = ({
                       })
                     : {})}
                 >
-                  {renderItem(value)}
+                  {itemRenderer(value, inputValue)}
                 </ComboBoxItem>
               ))}
             </div>

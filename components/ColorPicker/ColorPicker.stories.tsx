@@ -42,34 +42,34 @@ export const HexInput = () => {
   return <ColorPicker mode={"hexInput"} />;
 };
 
-export const Hsl = () => {
+export const HSL = () => {
   return <ColorPicker mode={"hsl"} />;
 };
 
-export const HslString = () => {
+export const HSLString = () => {
   return <ColorPicker mode={"hslString"} />;
 };
 
-export const Hsla = () => {
+export const HSLA = () => {
   return <ColorPicker mode={"hsla"} />;
 };
 
-export const HslaString = () => {
+export const HSLAString = () => {
   return <ColorPicker mode={"hslaString"} />;
 };
 
-export const Hsv = () => {
+export const HSV = () => {
   return <ColorPicker mode={"hsv"} />;
 };
 
-export const HsvString = () => {
+export const HSVString = () => {
   return <ColorPicker mode={"hsvString"} />;
 };
 
-export const Hsva = () => {
+export const HSVA = () => {
   return <ColorPicker mode={"hsva"} />;
 };
 
-export const HsvaString = () => {
+export const HSVAString = () => {
   return <ColorPicker mode={"hsvaString"} />;
 };

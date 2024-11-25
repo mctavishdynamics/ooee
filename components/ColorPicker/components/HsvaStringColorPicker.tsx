@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { AlphaColorPicker } from "./common/AlphaColorPicker";
+import { AlphaColorPicker } from "./components/AlphaColorPicker";
 import { ColorModel, ColorPickerBaseProps } from "../types";
 import { equalColorString } from "../utils/compare";
 import { hsvaStringToHsva, hsvaToHsvaString } from "../utils/convert";

@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 
-import { ColorPicker } from "./common/ColorPicker";
+import { ColorPicker } from "./components/ColorPicker";
 import { ColorModel, ColorPickerBaseProps, RgbColor } from "../types";
 import { equalColorObjects } from "../utils/compare";
 import { rgbaToHsva, hsvaToRgba, rgbaToRgb } from "../utils/convert";

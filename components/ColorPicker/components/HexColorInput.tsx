@@ -2,7 +2,7 @@ import { FC, useCallback } from "react";
 import { ColorInputBaseProps } from "../types";
 
 import { validHex } from "../utils/validate";
-import { ColorInput } from "./common/ColorInput";
+import { ColorInput } from "./components/ColorInput";
 import { ColorPickerTheme, getThemeClassName } from "../ColorPickerTheme.ts";
 
 interface HexColorInputProps extends ColorInputBaseProps {

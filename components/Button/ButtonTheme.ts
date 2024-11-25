@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { ThemeToken } from "../Theme/ThemeToken.ts";
+import { ThemeToken } from "../../lib/ThemeToken.ts";
 
 import styles from "./Button.module.css";
 

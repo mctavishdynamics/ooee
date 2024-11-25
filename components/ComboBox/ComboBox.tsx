@@ -26,15 +26,15 @@ import {
   useRole,
 } from "@floating-ui/react";
 
-import { InputText } from "../InputText/InputText";
-import { ComboBoxItem } from "./ComboBoxItem";
+import { InputText } from "../InputText/InputText.tsx";
+import { ComboBoxItem } from "./ComboBoxItem.tsx";
 import { ComboBoxIcons } from "./ComboBoxIcons.tsx";
 import {
   ComboBoxDefaultTheme,
   ComboBoxTheme,
   ComboBoxThemeArgs,
 } from "./ComboBoxTheme.ts";
-import { ThemeToken } from "../Theme/ThemeToken.ts";
+import { ThemeToken } from "../../lib/ThemeToken.ts";
 import { Debug } from "../Debug/Debug.tsx";
 
 export interface ComboBoxProps

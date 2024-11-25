@@ -1,19 +1,19 @@
 import type { Meta } from "@storybook/react";
 
-import { InputText } from "./InputText";
+import { Button } from "./Button.tsx";
 
 const meta = {
-  title: "InputText",
-  component: InputText,
+  title: "Button",
+  component: Button,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
   args: {},
-} satisfies Meta<typeof InputText>;
+} satisfies Meta<typeof Button>;
 
 export default meta;
 
 export const Default = () => {
-  return <InputText />;
+  return <Button>Hello World</Button>;
 };

@@ -6,7 +6,7 @@ import {
   ButtonDefaultTheme,
   ButtonThemeArgs,
 } from "./ButtonTheme.ts";
-import { ThemeToken } from "../Theme/ThemeToken.ts";
+import { ThemeToken } from "../../lib/ThemeToken.ts";
 import { Debug } from "../Debug/Debug.tsx";
 
 export const defaultClassNames = {

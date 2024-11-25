@@ -1,6 +1,6 @@
 import type { Meta } from "@storybook/react";
 
-import { ComboBox } from "./ComboBox";
+import { ComboBox } from "./ComboBox.tsx";
 import { useState } from "react";
 import { Debug } from "../Debug/Debug.tsx";
 import { Button } from "../Button/Button.tsx";

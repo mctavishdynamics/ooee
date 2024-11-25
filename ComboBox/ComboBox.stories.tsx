@@ -26,24 +26,28 @@ const DEFAULT_VALUES = [
 ];
 
 export const Default = () => {
-  const [debugMode] = useState(true);
+  const [debugMode] = useState(false);
   const [values, setValues] = useState<string[]>(DEFAULT_VALUES);
   const [value, setValue] = useState("");
 
   return (
     <>
-      <Button
-        onClick={() => {
-          if (values.length) {
-            setValues([]);
-          } else {
-            setValues(DEFAULT_VALUES);
-          }
-        }}
-      >
-        Toggle Empty
-      </Button>
-      {debugMode ? <Debug data={{ value, values }} /> : null}
+      {debugMode ? (
+        <>
+          <Button
+            onClick={() => {
+              if (values.length) {
+                setValues([]);
+              } else {
+                setValues(DEFAULT_VALUES);
+              }
+            }}
+          >
+            Toggle Empty
+          </Button>
+          <Debug data={{ value, values }} />{" "}
+        </>
+      ) : null}
       <ComboBox
         value={value}
         values={values}

@@ -64,10 +64,13 @@ export const ComboBox: FC<ComboBoxProps> = ({
   offsetMainAxis = 8,
   offsetAlignmentAxis,
   offsetCrossAxis,
+
   value = "",
   values = [],
+
   onCreate = () => {},
   onChange = () => {},
+
   ...inputProps
 }) => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,8 +84,8 @@ export const ComboBox: FC<ComboBoxProps> = ({
   const [selectedValue, setSelectedValue] = useState<string>(value);
   const [inputValue, setInputValue] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<Array<HTMLElement | null>>([]);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +119,9 @@ export const ComboBox: FC<ComboBoxProps> = ({
     },
     [isOpened, isHovered, isActive, isFocused],
   );
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // HOOKS
 
   useUpdateEffect(() => {
     if (inputValue !== null) {
@@ -341,12 +347,21 @@ export const ComboBox: FC<ComboBoxProps> = ({
           >
             <div
               className={getThemeClassName("ComboBox_List", __theme.List)}
+              onFocus={() => {
+                setIsFocused(true);
+              }}
+              onBlur={() => setIsFocused(false)}
               {...getFloatingProps({
                 ref: refs.setFloating,
                 style: {
                   ...floatingStyles,
                 },
               })}
+              onMouseLeave={(ev) => {
+                if (ev.buttons) {
+                  setIsOpened(false);
+                }
+              }}
             >
               {filteredItems.map((item, index) => (
                 <ComboBoxItem

@@ -45,7 +45,7 @@ ComboBox
 
   --ooee--InputText--outline-width--focus-visible: 0;
 
-  &:focus-within {
+  &.ComboBox__focus {
     outline-width: var(--ooee--ComboBox--outline-width--focus-within);
     outline-style: var(--ooee--ComboBox--outline-style--focus-within);
     outline-color: var(--ooee--ComboBox--outline-color--focus-within);

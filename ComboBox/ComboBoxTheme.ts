@@ -23,29 +23,37 @@ export interface ComboBoxTheme {
 }
 
 export const ComboBoxDefaultTheme: ComboBoxTheme = {
-  ComboBox: ({ hover, active, open }) =>
+  ComboBox: ({ hover, active, open, focus }) =>
     clsx(styles.ComboBox, {
-      [styles.ComboBox__hover]: hover,
+      [styles.ComboBox__focus]: focus,
+
+      [styles.ComboBox__hover]: !active && hover,
       [styles.ComboBox__active]: active,
+
       [styles.ComboBox__closed]: !open,
       [styles.ComboBox__open]: open,
     }),
 
   InputText: ({ open, hover, active, focus }) =>
     clsx(styles.InputText, {
-      [styles.InputText__open]: open,
-      [styles.InputText__hover]: hover,
-      [styles.InputText__active]: active,
       [styles.InputText__focus]: focus,
+
+      [styles.InputText__hover]: !active && hover,
+      [styles.InputText__active]: active,
+
+      [styles.InputText__closed]: !open,
+      [styles.InputText__open]: open,
     }),
 
   Toggle: ({ open, hover, active, focus }) =>
     clsx(styles.Toggle, {
-      [styles.Toggle__hover]: hover,
+      [styles.Toggle__focus]: focus,
+
+      [styles.Toggle__hover]: !active && hover,
       [styles.Toggle__active]: active,
+
       [styles.Toggle__closed]: !open,
       [styles.Toggle__open]: open,
-      [styles.Toggle__focus]: focus,
     }),
 
   Toggle_ClosedIcon: ({ open }) =>

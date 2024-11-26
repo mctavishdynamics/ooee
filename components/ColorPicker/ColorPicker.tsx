@@ -24,7 +24,7 @@ import { HsvaColorPicker } from "./components/HsvaColorPicker.tsx";
 import { HsvaStringColorPicker } from "./components/HsvaStringColorPicker.tsx";
 import { HexColorInput } from "./components/HexColorInput.tsx";
 
-interface ColorPickerProps {
+export interface ColorPickerProps {
   theme?: () => void;
   unstyled?: boolean;
 
@@ -48,7 +48,7 @@ interface ColorPickerProps {
     | "hsva"
     | "hsvaString";
 
-  onChange?: (color: AnyColor) => void;
+  onChange?: (color: string) => void;
 }
 
 export const ColorPicker: FC<ColorPickerProps> = ({
@@ -57,9 +57,7 @@ export const ColorPicker: FC<ColorPickerProps> = ({
   width = "200px",
   height = "200px",
   mode = "rgb",
-  onChange = (newColor) => {
-    console.log(newColor);
-  },
+  onChange = () => {},
 }) => {
   const __theme = Object.assign(
     {} as ColorPickerTheme,
@@ -90,7 +88,9 @@ export const ColorPicker: FC<ColorPickerProps> = ({
   const props = {
     theme: __theme,
     getThemeClassName,
-    onChange,
+    onChange: (newColor: AnyColor) => {
+      onChange(newColor as string);
+    },
   };
 
   return (

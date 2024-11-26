@@ -20,6 +20,8 @@ export interface ColorPickerTheme {
   AlphaPointer: ThemeToken<ColorPickerThemeArgs>;
   Interactive: ThemeToken<ColorPickerThemeArgs>;
   PointerFill: ThemeToken<ColorPickerThemeArgs>;
+  Swatches: ThemeToken<ColorPickerThemeArgs>;
+  Swatch: ThemeToken<ColorPickerThemeArgs>;
 }
 
 export const ColorPickerDefaultTheme: ColorPickerTheme = {
@@ -34,6 +36,8 @@ export const ColorPickerDefaultTheme: ColorPickerTheme = {
   AlphaPointer: () => clsx(styles.Pointer, styles.AlphaPointer, {}),
   Interactive: () => clsx(styles.Interactive, {}),
   PointerFill: () => clsx(styles.PointerFill, {}),
+  Swatches: () => clsx(styles.Swatches, {}),
+  Swatch: () => clsx(styles.Swatch, {}),
 };
 
 export type getThemeClassName = (

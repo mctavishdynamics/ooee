@@ -25,6 +25,7 @@ export const Default = () => {
       onChange={(newColor) => {
         setColor(newColor);
       }}
+      colorSwatches={["#f00", "#0f0", "#00f"]}
     >
       {({ isOpened, setIsOpened }) => {
         return (

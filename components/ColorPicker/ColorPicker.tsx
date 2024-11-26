@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { ThemeToken } from "../../lib/ThemeToken.ts";
 import {
   ColorPickerDefaultTheme,
@@ -23,10 +23,14 @@ import { HslaStringColorPicker } from "./components/HslaStringColorPicker.tsx";
 import { HsvaColorPicker } from "./components/HsvaColorPicker.tsx";
 import { HsvaStringColorPicker } from "./components/HsvaStringColorPicker.tsx";
 import { HexColorInput } from "./components/HexColorInput.tsx";
+import { useDebounce } from "react-use";
 
 export interface ColorPickerProps {
   theme?: () => void;
   unstyled?: boolean;
+
+  color?: string;
+  colorSwatches?: string[];
 
   width?: string;
   height?: string;
@@ -54,6 +58,8 @@ export interface ColorPickerProps {
 export const ColorPicker: FC<ColorPickerProps> = ({
   theme = () => {},
   unstyled = false,
+  color,
+  colorSwatches,
   width = "200px",
   height = "200px",
   mode = "rgb",
@@ -85,34 +91,88 @@ export const ColorPicker: FC<ColorPickerProps> = ({
     [],
   );
 
+  const [selectedColor, setSelectedColor] = useState(color || "#fff");
+  const [debouncedSelectedColor, setDebouncedSelectedColor] =
+    useState(selectedColor);
+
+  useDebounce(
+    () => {
+      setDebouncedSelectedColor(selectedColor);
+    },
+    250,
+    [selectedColor],
+  );
+
+  useEffect(() => {
+    onChange(debouncedSelectedColor);
+  }, [debouncedSelectedColor]);
+
+  useEffect(() => {
+    if (color) {
+      setSelectedColor(color);
+    } else {
+      setSelectedColor("#fff");
+    }
+  }, [color]);
+
   const props = {
     theme: __theme,
     getThemeClassName,
     onChange: (newColor: AnyColor) => {
-      onChange(newColor as string);
+      setSelectedColor(newColor as string);
     },
   };
 
   return (
-    <div
-      className={getThemeClassName("ColorPicker", __theme.ColorPicker)}
-      style={{ width, height }}
-    >
-      {mode === "rgb" ? <RgbColorPicker {...props} /> : null}
-      {mode === "rgbString" ? <RgbStringColorPicker {...props} /> : null}
-      {mode === "rgba" ? <RgbaColorPicker {...props} /> : null}
-      {mode === "rgbaString" ? <RgbaStringColorPicker {...props} /> : null}
-      {mode === "hex" ? <HexColorPicker {...props} /> : null}
-      {mode === "hexAlpha" ? <HexAlphaColorPicker {...props} /> : null}
-      {mode === "hexInput" ? <HexColorInput {...props} /> : null}
-      {mode === "hsl" ? <HslColorPicker {...props} /> : null}
-      {mode === "hslString" ? <HslStringColorPicker {...props} /> : null}
-      {mode === "hsla" ? <HslaColorPicker {...props} /> : null}
-      {mode === "hslaString" ? <HslaStringColorPicker {...props} /> : null}
-      {mode === "hsv" ? <HsvColorPicker {...props} /> : null}
-      {mode === "hsvString" ? <HsvStringColorPicker {...props} /> : null}
-      {mode === "hsva" ? <HsvaColorPicker {...props} /> : null}
-      {mode === "hsvaString" ? <HsvaStringColorPicker {...props} /> : null}
+    <div className={getThemeClassName("ColorPicker", __theme.ColorPicker)}>
+      <div style={{ width, height }}>
+        {mode === "rgb" ? <RgbColorPicker {...props} /> : null}
+        {mode === "rgbString" ? <RgbStringColorPicker {...props} /> : null}
+        {mode === "rgba" ? <RgbaColorPicker {...props} /> : null}
+        {mode === "rgbaString" ? <RgbaStringColorPicker {...props} /> : null}
+        {mode === "hex" ? (
+          <HexColorPicker color={selectedColor} {...props} />
+        ) : null}
+        {mode === "hexAlpha" ? <HexAlphaColorPicker {...props} /> : null}
+        {mode === "hexInput" ? <HexColorInput {...props} /> : null}
+        {mode === "hsl" ? <HslColorPicker {...props} /> : null}
+        {mode === "hslString" ? <HslStringColorPicker {...props} /> : null}
+        {mode === "hsla" ? <HslaColorPicker {...props} /> : null}
+        {mode === "hslaString" ? <HslaStringColorPicker {...props} /> : null}
+        {mode === "hsv" ? <HsvColorPicker {...props} /> : null}
+        {mode === "hsvString" ? <HsvStringColorPicker {...props} /> : null}
+        {mode === "hsva" ? <HsvaColorPicker {...props} /> : null}
+        {mode === "hsvaString" ? <HsvaStringColorPicker {...props} /> : null}
+      </div>
+
+      {colorSwatches ? (
+        <ul
+          className={getThemeClassName(
+            "ColorPicker_Swatches",
+            __theme.Swatches,
+          )}
+          style={{ width: width }}
+        >
+          {colorSwatches.map((cs) => (
+            <li
+              className={getThemeClassName(
+                "ColorPicker_Swatch",
+                __theme.Swatch,
+              )}
+              style={{
+                backgroundColor: cs,
+              }}
+            >
+              <button
+                onClick={() => {
+                  setSelectedColor(cs);
+                  setDebouncedSelectedColor(cs);
+                }}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 };

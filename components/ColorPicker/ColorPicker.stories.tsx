@@ -1,6 +1,8 @@
 import type { Meta } from "@storybook/react";
 
 import { ColorPicker } from "./ColorPicker.tsx";
+import { useState } from "react";
+import { Button } from "../Button/Button.tsx";
 
 const meta = {
   title: "ColorPicker",
@@ -31,7 +33,33 @@ export const RGBAString = () => {
 };
 
 export const Hex = () => {
-  return <ColorPicker mode={"hex"} />;
+  const [color, setColor] = useState("#0f0");
+
+  return (
+    <>
+      {color}
+      <Button
+        onClick={() => {
+          setColor("#f00");
+        }}
+      >
+        Set to Red
+      </Button>
+      <Button
+        onClick={() => {
+          setColor("#0ff");
+        }}
+      >
+        Set to Cyan
+      </Button>
+      <ColorPicker
+        color={color}
+        mode={"hex"}
+        colorSwatches={["#f00", "#0f0", "#00f"]}
+        onChange={setColor}
+      />
+    </>
+  );
 };
 
 export const HexAlpha = () => {

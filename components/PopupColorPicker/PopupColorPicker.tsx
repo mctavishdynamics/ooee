@@ -21,7 +21,7 @@ interface PopupColorPickerProps extends ColorPickerProps {
     isOpened: boolean;
     setIsOpened: Dispatch<SetStateAction<boolean>>;
   }) => ReactNode;
-  onClose: (newColor: string) => void;
+  onClose?: (newColor: string) => void;
 }
 
 export const PopupColorPicker: FC<PopupColorPickerProps> = ({
@@ -29,6 +29,7 @@ export const PopupColorPicker: FC<PopupColorPickerProps> = ({
   children,
   onChange = () => {},
   onClose = () => {},
+  ...rest
 }) => {
   const [isOpened, setIsOpened] = useState(false);
   const selectedColorRef = useRef("");
@@ -62,6 +63,7 @@ export const PopupColorPicker: FC<PopupColorPickerProps> = ({
           {...getFloatingProps()}
         >
           <ColorPicker
+            {...rest}
             mode={mode}
             onChange={(newColor) => {
               selectedColorRef.current = newColor;

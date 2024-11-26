@@ -26,7 +26,7 @@ export const Default = () => {
         setColor(newColor);
       }}
     >
-      {(isOpened, setIsOpened) => {
+      {({ isOpened, setIsOpened }) => {
         return (
           <div style={{ display: "flex" }}>
             <div

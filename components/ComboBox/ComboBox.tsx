@@ -251,8 +251,6 @@ export const ComboBox: FC<ComboBoxProps> = ({
       ? true
       : false;
 
-  console.log(isEmpty);
-
   function handleSelect(value: string) {
     if (enableCreation && value === "__NEW__") {
       if (inputValue !== null) {

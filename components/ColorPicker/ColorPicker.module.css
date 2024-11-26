@@ -1,27 +1,32 @@
 .ColorPicker {
-  padding: 32px;
+  box-sizing: border-box;
+  padding: 8px;
   background: #eee;
+  border-radius: 8px;
 }
 
 .Picker {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
+  /*width: 400px;*/
+  /*height: 400px;*/
   user-select: none;
   cursor: default;
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 }
 
 .Control {
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
-.Gradient {}
+.Gradient {
+}
 
 .Interactive {
   position: absolute;
@@ -36,7 +41,13 @@
 
   &:focus {
     .Pointer {
-      border-color: blue;
+      transition:
+        width 100ms ease-in-out,
+        height 100ms ease-in-out;
+      width: 20px;
+      height: 20px;
+
+      box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.5);
     }
   }
 }
@@ -45,15 +56,17 @@
   position: absolute;
   z-index: 1;
   box-sizing: border-box;
-  width: 28px;
-  height: 28px;
+  width: 16px;
+  height: 16px;
   transform: translate(-50%, -50%);
   background-color: #fff;
   border: 2px solid #fff;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-  transform: translate(-50%, -50%) scale(1.1);
+  transition:
+    width 100ms ease-in-out,
+    height 100ms ease-in-out;
 }
 
 .PointerFill {
@@ -69,7 +82,7 @@
 
 .Hue {
   position: relative;
-  height: 24px;
+  height: 16px;
 
   background: linear-gradient(
     to right,
@@ -102,7 +115,7 @@
 
 .Alpha {
   position: relative;
-  height: 24px;
+  height: 16px;
 
   background-color: #fff;
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"><rect x="8" width="8" height="8"/><rect y="8" width="8" height="8"/></svg>');

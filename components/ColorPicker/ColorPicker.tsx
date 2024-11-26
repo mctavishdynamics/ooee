@@ -28,6 +28,9 @@ interface ColorPickerProps {
   theme?: () => void;
   unstyled?: boolean;
 
+  width?: string;
+  height?: string;
+
   mode?:
     | "rgb"
     | "rgbString"
@@ -51,6 +54,8 @@ interface ColorPickerProps {
 export const ColorPicker: FC<ColorPickerProps> = ({
   theme = () => {},
   unstyled = false,
+  width = "200px",
+  height = "200px",
   mode = "rgb",
   onChange = (newColor) => {
     console.log(newColor);
@@ -89,7 +94,10 @@ export const ColorPicker: FC<ColorPickerProps> = ({
   };
 
   return (
-    <div className={getThemeClassName("ColorPicker", __theme.ColorPicker)}>
+    <div
+      className={getThemeClassName("ColorPicker", __theme.ColorPicker)}
+      style={{ width, height }}
+    >
       {mode === "rgb" ? <RgbColorPicker {...props} /> : null}
       {mode === "rgbString" ? <RgbStringColorPicker {...props} /> : null}
       {mode === "rgba" ? <RgbaColorPicker {...props} /> : null}

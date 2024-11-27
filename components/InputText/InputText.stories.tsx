@@ -17,3 +17,7 @@ export default meta;
 export const Default = () => {
   return <InputText />;
 };
+
+export const Number = () => {
+  return <InputText type={"number"} />;
+};

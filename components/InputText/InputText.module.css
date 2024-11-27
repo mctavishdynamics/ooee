@@ -32,4 +32,9 @@
         outline-color: var(--ooee--InputText--outline-color--focus-visible);
         outline-offset: var(--ooee--InputText--outline-offset--focus-visible);
     }
+
+    &[type=number]::-webkit-outer-spin-button,
+    &[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
 }

@@ -12,6 +12,7 @@ import {
   ButtonThemeArgs,
 } from "../Button/ButtonTheme.ts";
 import { ThemeToken } from "../../lib/ThemeToken.ts";
+import clsx from "clsx";
 
 export interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   unstyled?: boolean;
@@ -44,18 +45,22 @@ export const InputText = forwardRef(
         defaultClassName: string,
         themeToken: ThemeToken<ButtonThemeArgs>,
         overrides: Partial<ButtonThemeArgs> = {},
+        className?: string,
       ) => {
         if (unstyled) {
-          return defaultClassName;
+          return clsx(defaultClassName, className);
         } else if (typeof themeToken !== "function") {
-          return themeToken;
+          return clsx(themeToken, className);
         } else {
-          return themeToken({
+          return clsx(
+            themeToken({
             hover: isHovered,
             active: isActive,
             focus: isFocused,
             ...overrides,
-          });
+            }),
+            className,
+          );
         }
       },
       [unstyled, isHovered, isActive, isFocused],
@@ -109,7 +114,12 @@ export const InputText = forwardRef(
             inputProps.onBlur(ev);
           }
         }}
-        className={getThemeClassName("InputText", __theme.InputText)}
+        className={getThemeClassName(
+          "InputText",
+          __theme.InputText,
+          {},
+          inputProps.className,
+        )}
         ref={ref}
       />
     );

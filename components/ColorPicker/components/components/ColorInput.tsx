@@ -9,12 +9,11 @@ import {
 
 import { useEventCallback } from "../../hooks/useEventCallback";
 import { ColorInputBaseProps } from "../../types";
-import { ColorPickerTheme, getThemeClassName } from "../../ColorPickerTheme.ts";
+import { ColorPickerTheme } from "../../ColorPickerTheme.ts";
 import { InputText } from "../../../InputText/InputText.tsx";
 
 interface Props extends ColorInputBaseProps {
-  theme: ColorPickerTheme;
-  getThemeClassName: getThemeClassName;
+  theme?: ColorPickerTheme;
 
   /** Blocks typing invalid characters and limits string length */
   escape: (value: string) => string;
@@ -35,7 +34,6 @@ export const ColorInput: FC<Props> = (props) => {
     validate,
     format,
     process,
-    ...rest
   } = props;
   const [value, setValue] = useState(() => escape(color));
   const onChangeCallback = useEventCallback<string>(onChange);
@@ -68,7 +66,6 @@ export const ColorInput: FC<Props> = (props) => {
 
   return (
     <InputText
-      {...rest}
       value={format ? format(value) : value}
       spellCheck="false" // the element should not be checked for spelling errors
       onChange={handleChange}

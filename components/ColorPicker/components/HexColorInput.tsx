@@ -3,11 +3,10 @@ import { ColorInputBaseProps } from "../types";
 
 import { validHex } from "../utils/validate";
 import { ColorInput } from "./components/ColorInput";
-import { ColorPickerTheme, getThemeClassName } from "../ColorPickerTheme.ts";
+import { ColorPickerTheme } from "../ColorPickerTheme.ts";
 
 interface HexColorInputProps extends ColorInputBaseProps {
-  theme: ColorPickerTheme;
-  getThemeClassName: getThemeClassName;
+  theme?: ColorPickerTheme;
 
   /** Enables `#` prefix displaying */
   prefixed?: boolean;
@@ -19,7 +18,7 @@ interface HexColorInputProps extends ColorInputBaseProps {
 const prefix = (value: string) => "#" + value;
 
 export const HexColorInput: FC<HexColorInputProps> = (props) => {
-  const { prefixed, alpha, ...rest } = props;
+  const { prefixed, alpha } = props;
 
   /** Escapes all non-hexadecimal characters including "#" */
   const escape = useCallback(
@@ -36,7 +35,6 @@ export const HexColorInput: FC<HexColorInputProps> = (props) => {
 
   return (
     <ColorInput
-      {...rest}
       escape={escape}
       format={prefixed ? prefix : undefined}
       process={prefix}

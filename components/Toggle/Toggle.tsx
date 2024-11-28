@@ -1,4 +1,4 @@
-import { useState, useCallback, HTMLAttributes } from "react";
+import { useState, useCallback, InputHTMLAttributes, useEffect } from "react";
 import {
   ToggleDefaultTheme,
   ToggleTheme,
@@ -7,7 +7,7 @@ import {
 import { ThemeToken } from "../../lib/ThemeToken.ts";
 import clsx from "clsx";
 
-export interface ToggleProps extends HTMLAttributes<HTMLElement> {
+export interface ToggleProps extends InputHTMLAttributes<HTMLInputElement> {
   unstyled?: boolean;
   theme?: ToggleTheme;
 }
@@ -20,10 +20,17 @@ export const Toggle = ({
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // STATE
 
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(props.checked || false);
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // HOOKS
+
+  useEffect(() => {
+    setIsChecked(props.checked || false);
+  }, [props.checked]);
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // THEME

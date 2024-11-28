@@ -1,0 +1,19 @@
+import type { Meta } from "@storybook/react";
+
+import { {{name}} } from "./{{name}}.tsx";
+
+const meta = {
+  title: "{{name}}",
+  component: {{name}},
+  tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+  },
+  args: {},
+} satisfies Meta<typeof {{name}}>;
+
+export default meta;
+
+export const Default = () => {
+  return <{{name}} />;
+};

@@ -1,0 +1,118 @@
+import { useState, useCallback, HTMLAttributes } from "react";
+import {
+  {{name}}DefaultTheme,
+  {{name}}Theme,
+  {{name}}ThemeArgs,
+} from "./{{name}}Theme.ts";
+import { ThemeToken } from "../../lib/ThemeToken.ts";
+import clsx from "clsx";
+
+export interface {{name}}Props extends HTMLAttributes<HTMLElement> {
+  unstyled?: boolean;
+  theme?: {{name}}Theme;
+}
+
+export const {{name}} = ({
+  unstyled = false,
+  theme = {{name}}DefaultTheme,
+  ...props
+}: {{name}}Props) => {
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // STATE
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // THEME
+
+  const __theme = Object.assign(
+    {} as {{name}}Theme,
+    {{name}}DefaultTheme,
+    theme,
+  );
+
+  const getThemeClassName = useCallback(
+    (
+      defaultClassName: string,
+      themeToken: ThemeToken<{{name}}ThemeArgs>,
+      overrides: Partial<{{name}}ThemeArgs> = {},
+      className?: string,
+    ) => {
+      if (unstyled) {
+        return clsx(defaultClassName, className);
+      } else if (typeof themeToken !== "function") {
+        return clsx(themeToken, className);
+      } else {
+        return clsx(
+          themeToken({
+            hover: isHovered,
+            active: isActive,
+            focus: isFocused,
+            ...overrides,
+          }),
+          className,
+        );
+      }
+    },
+    [unstyled, isHovered, isActive, isFocused],
+  );
+
+  return (
+    <button
+      {...props}
+      className={getThemeClassName(
+        "{{name}}",
+        __theme.{{name}},
+        {},
+        props.className,
+      )}
+      onMouseEnter={(ev) => {
+        setIsHovered(true);
+
+        if (props.onMouseEnter) {
+          props.onMouseEnter(ev);
+        }
+      }}
+      onMouseLeave={(ev) => {
+        setIsHovered(false);
+        setIsActive(false);
+
+        if (props.onMouseLeave) {
+          props.onMouseLeave(ev);
+        }
+      }}
+      onMouseDown={(ev) => {
+        setIsActive(true);
+        setIsHovered(false);
+
+        if (props.onMouseDown) {
+          props.onMouseDown(ev);
+        }
+      }}
+      onMouseUp={(ev) => {
+        setIsActive(false);
+        setIsHovered(true);
+
+        if (props.onMouseUp) {
+          props.onMouseUp(ev);
+        }
+      }}
+      onFocus={(ev) => {
+        setIsFocused(true);
+
+        if (props.onFocus) {
+          props.onFocus(ev);
+        }
+      }}
+      onBlur={(ev) => {
+        setIsFocused(false);
+
+        if (props.onBlur) {
+          props.onBlur(ev);
+        }
+      }}
+    />
+  );
+};

@@ -1,0 +1,7 @@
+:root {
+  --ooee--NAME____--background-color: #eee;
+}
+
+.NAME____ {
+  background-color: var(--ooee--NAME____--background-color);
+}

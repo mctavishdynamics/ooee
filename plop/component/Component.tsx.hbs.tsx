@@ -1,3 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+//---
+
 import { useState, useCallback, HTMLAttributes } from "react";
 import {
   NAME____DefaultTheme,

@@ -1,0 +1,77 @@
+:root {
+  --ooee--Toggle--background-color: #eee;
+  --ooee--Toggle--width: 32px;
+  --ooee--Toggle--height: 16px;
+
+  --ooee--Toggle__hover--background-color: #ddd;
+  --ooee--Toggle__active--background-color: #ccc;
+
+  --ooee--Toggle-Switch--inset: 2px;
+
+  --ooee--Toggle__unchecked-Switch--background-color: #aaa;
+  --ooee--Toggle__checked-Switch--background-color: #000;
+}
+
+.Toggle {
+  background-color: var(--ooee--Toggle--background-color);
+  position: relative;
+
+  width: var(--ooee--Toggle--width);
+  height: var(--ooee--Toggle--height);
+  border-radius: 512px;
+}
+
+.Toggle__hover {
+  background-color: var(--ooee--Toggle__hover--background-color);
+}
+
+.Toggle__active {
+  background-color: var(--ooee--Toggle__active--background-color);
+}
+
+.Input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  z-index: 2;
+}
+
+.Switch {
+  border-radius: 512px;
+  position: absolute;
+  z-index: 1;
+}
+
+.Switch__unchecked {
+  top: var(--ooee--Toggle-Switch--inset);
+  left: var(--ooee--Toggle-Switch--inset);
+  width: calc(
+    var(--ooee--Toggle--height) - var(--ooee--Toggle-Switch--inset) * 2
+  );
+  height: calc(
+    var(--ooee--Toggle--height) - var(--ooee--Toggle-Switch--inset) * 2
+  );
+
+  background-color: var(--ooee--Toggle__unchecked-Switch--background-color);
+
+  transition: all 50ms ease-in-out;
+}
+
+.Switch__checked {
+  top: var(--ooee--Toggle-Switch--inset);
+  left: calc(
+    var(--ooee--Toggle--width) - var(--ooee--Toggle--height) +
+      var(--ooee--Toggle-Switch--inset)
+  );
+
+  width: calc(
+          var(--ooee--Toggle--height) - var(--ooee--Toggle-Switch--inset) * 2
+  );
+  height: calc(
+          var(--ooee--Toggle--height) - var(--ooee--Toggle-Switch--inset) * 2
+  );
+
+  background-color: var(--ooee--Toggle__checked-Switch--background-color);
+
+  transition: all 50ms ease-in-out;
+}
